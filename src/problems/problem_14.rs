@@ -4,7 +4,7 @@ use std::{collections::HashMap, time::Instant};
 
 #[allow(dead_code)]
 fn solution_1(limit: u128) {
-    // uses hashmap to store the sequence_lengths already created
+    // uses hashmap to store the sequence_lengths already created``
 
     fn helper(map: &mut HashMap<u128, u128>, number: u128, limit: u128) -> u128 {
 
