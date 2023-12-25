@@ -1,13 +1,15 @@
 #[allow(unused_imports)]
-use project_euler::math;
-use std::time::Instant;
+use crate::{
+    maths,
+    time_solutions,
+};
 
 #[allow(dead_code)]
 fn solution_1(number: u128) {
-    let mut ans: u128 = math::int_sqrt(number);
+    let mut ans: u128 = maths::int_sqrt(number);
 
     while ans > 2 {
-        if number % ans == 0 && math::is_prime(ans) {
+        if number % ans == 0 && maths::is_prime(ans) {
             println!("Answer : {}", ans);
 
             return;
@@ -18,13 +20,13 @@ fn solution_1(number: u128) {
 
 #[allow(dead_code)]
 fn solution_2(number: u128) {
-    let ans: u128 = math::int_sqrt(number);
+    let ans: u128 = maths::int_sqrt(number);
 
-    let primes: Vec<u128> = math::sieve_of_eratosthenes(ans);
+    let primes: Vec<u128> = maths::sieve_of_eratosthenes(ans);
 
     for prime in primes.iter().rev() {
         if number % *prime == 0 {
-            println!("{}", prime);
+            println!("Answer : {}", prime);
             return;
         }
     }
@@ -34,7 +36,8 @@ fn solution_2(number: u128) {
 pub fn solve() {
     let number: u128 = 600851475143;
 
-    let now: Instant = Instant::now();
-    solution_1(number);
-    println!("Elapsed : {:?}", now.elapsed());
+    time_solutions!(
+        solution_1(number),
+        solution_2(number)
+    );
 }

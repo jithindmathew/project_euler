@@ -1,6 +1,8 @@
 #[allow(unused_imports)]
-use project_euler::math;
-use std::time::Instant;
+use crate::{
+    maths,
+    time_solutions,
+};
 
 #[allow(dead_code)]
 fn solution_1(n: u128) {
@@ -14,7 +16,7 @@ fn solution_1(n: u128) {
 pub fn solve() {
     let n: u128 = 100;
 
-    let now: Instant = Instant::now();
-    solution_1(n);
-    println!("Elapsed : {:?}", now.elapsed());
+    time_solutions!(
+        solution_1(n)
+    );
 }

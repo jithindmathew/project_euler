@@ -1,15 +1,19 @@
 #[allow(unused_imports)]
-use project_euler::math;
-use std::time::Instant;
+use crate::{
+    maths,
+    time_solutions,
+};
 
 #[allow(dead_code)]
-fn solution_1() {
-    println!("Answer : {}", math::nth_prime(10001));
+fn solution_1(n: u128) {
+    println!("Answer : {}", maths::nth_prime(n));
 }
 
 #[allow(dead_code)]
 pub fn solve() {
-    let now: Instant = Instant::now();
-    solution_1();
-    println!("Elapsed : {:?}", now.elapsed());
+    let n: u128 = 10001;
+
+    time_solutions!(
+        solution_1(n)
+    );
 }

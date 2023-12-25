@@ -1,6 +1,5 @@
 #[allow(unused_imports)]
-use project_euler::math;
-use std::time::Instant;
+use crate::{maths, time_solutions};
 
 #[allow(dead_code)]
 fn solution_1(limit: u128, multiples_of: Vec<u128>) {
@@ -22,7 +21,7 @@ pub fn solve() {
     let limit: u128 = 1000;
     let multiples_of: Vec<u128> = vec![3, 5];
 
-    let now: Instant = Instant::now();
-    solution_1(limit, multiples_of);
-    println!("Elapsed : {:?}", now.elapsed());
+    time_solutions!(
+        solution_1(limit, multiples_of)
+    );
 }

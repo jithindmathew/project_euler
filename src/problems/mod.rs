@@ -1,8 +1,5 @@
 #![cfg_attr(rustfmt, rustfmt_skip)]  // prevents rustfmt from ordering based on numbering
-
 pub mod problem;
-pub mod problem_sample;
-
 pub mod problem_1;
 pub mod problem_2;
 pub mod problem_3;

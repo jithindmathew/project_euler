@@ -1,5 +1,5 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use project_euler::math::*;
+use project_euler::maths::*;
 use std::time::Duration;
 
 /// benchmark functions
@@ -52,8 +52,8 @@ fn benchmark_primes_upto_n(c: &mut Criterion) {
 criterion_group!(
     name=benches;
     config = Criterion::default()
-        .sample_size(1000)
-        .measurement_time(Duration::from_secs(10))
+        .sample_size(100)
+        .measurement_time(Duration::from_secs(5))
         .warm_up_time(Duration::from_secs(2));
 
     targets =

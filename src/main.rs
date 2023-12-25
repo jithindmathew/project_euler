@@ -1,5 +1,6 @@
 use std::env;
-
+mod macros;
+mod maths;
 mod problems;
 
 fn main() {

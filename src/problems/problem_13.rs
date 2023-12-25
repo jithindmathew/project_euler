@@ -1,6 +1,8 @@
 #[allow(unused_imports)]
-use project_euler::math;
-use std::time::Instant;
+use crate::{
+    maths,
+    time_solutions,
+};
 
 #[allow(dead_code)]
 fn solution_1(nums: Vec<String>, first_n_digits: u128) {
@@ -140,7 +142,7 @@ pub fn solve() {
     ];
     let first_n_digits: u128 = 10;
 
-    let now: Instant = Instant::now();
-    solution_1(nums, first_n_digits);
-    println!("Elapsed : {:?}", now.elapsed());
+    time_solutions!(
+        solution_1(nums, first_n_digits)
+    );
 }

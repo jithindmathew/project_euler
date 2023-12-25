@@ -8,9 +8,6 @@ edition = "2021"
 [dependencies]
 criterion = "0.5.1"
 
-# [lib]
-# name = "project_euler"
-
 [[bench]]
 name = "benchmarks"
 harness = false

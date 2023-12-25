@@ -1,6 +1,9 @@
 #[allow(unused_imports)]
-use project_euler::math;
 use std::{collections::HashMap, time::Instant};
+use crate::{
+    maths,
+    time_solutions,
+};
 
 #[allow(dead_code)]
 fn solution_1(limit: u128) {
@@ -8,14 +11,14 @@ fn solution_1(limit: u128) {
 
     let mut ans: u128 = 1;
 
-    let primes: Vec<u128> = math::sieve_of_eratosthenes(limit);
+    let primes: Vec<u128> = maths::sieve_of_eratosthenes(limit);
 
     for i in &primes {
         primes_map.insert(*i, 0);
     }
 
     for i in 2..=limit {
-        let temp_map: HashMap<u128, u128> = math::prime_factors_with_sieve_as_hashmap(i);
+        let temp_map: HashMap<u128, u128> = maths::prime_factors_with_sieve_as_hashmap(i);
         for (&key, &val) in temp_map.iter() {
             primes_map.insert(key, u128::max(val, *primes_map.get(&key).unwrap()));
         }
@@ -32,7 +35,7 @@ fn solution_1(limit: u128) {
 pub fn solve() {
     let limit: u128 = 10;
 
-    let now: Instant = Instant::now();
-    solution_1(limit);
-    println!("Elapsed : {:?}", now.elapsed());
+    time_solutions!(
+        solution_1(limit)
+    );
 }

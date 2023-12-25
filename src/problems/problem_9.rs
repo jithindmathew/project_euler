@@ -1,6 +1,8 @@
 #[allow(unused_imports)]
-use project_euler::math;
-use std::time::Instant;
+use crate::{
+    maths,
+    time_solutions,
+};
 
 #[allow(dead_code)]
 fn solution_1(n: u128) {
@@ -14,7 +16,7 @@ fn solution_1(n: u128) {
     b = 2*m*n
     c = m^2 + n^2
     */
-    let sqrt: u128 = math::int_sqrt(n) + 1;
+    let sqrt: u128 = maths::int_sqrt(n) + 1;
 
     for n in 1..=sqrt {
         for m in n + 1..=sqrt {
@@ -34,7 +36,7 @@ fn solution_1(n: u128) {
 pub fn solve() {
     let n: u128 = 1000;
 
-    let now: Instant = Instant::now();
-    solution_1(n);
-    println!("Elapsed : {:?}", now.elapsed());
+    time_solutions!(
+        solution_1(n)
+    );
 }

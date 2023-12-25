@@ -1,15 +1,17 @@
 #[allow(unused_imports)]
-use project_euler::math;
-use std::time::Instant;
+use crate::{
+    maths,
+    time_solutions,
+};
 
 #[allow(dead_code)]
 fn solution_1() {
     let mut n: u128 = 1;
 
-    while n < math::int_sqrt(std::u128::MAX) {
+    while n < maths::int_sqrt(std::u128::MAX) {
         let triangle_num: u128 = n * (n + 1) / 2;
 
-        if math::num_divisors(triangle_num) > 500 {
+        if maths::num_divisors(triangle_num) > 500 {
             println!("Answer : {}", triangle_num);
             return;
         }
@@ -20,7 +22,7 @@ fn solution_1() {
 
 #[allow(dead_code)]
 pub fn solve() {
-    let now: Instant = Instant::now();
-    solution_1();
-    println!("Elapsed : {:?}", now.elapsed());
+    time_solutions!(
+        solution_1()
+    );
 }
