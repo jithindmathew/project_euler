@@ -1043,18 +1043,48 @@ pub fn sieve_of_eratosthenes(n: u128) -> Vec<u128> {
     return primes;
 }
 
-
 #[cfg(test)]
 mod tests {
     // for detailed testing of functions with edge cases.
     use super::*;
 
     #[test]
-    fn test_int_sqrt() {
-        let result: u128 = int_sqrt(78);
-        assert_eq!(result, 8);
+    fn test_all_divisors() {
+        let test_cases: Vec<(u128, Vec<u128>)> = vec![
+            (0, vec![]),
+            (1, vec![1]),
+            (2, vec![1, 2]),
+            (3, vec![1, 3]),
+            (4, vec![1, 2, 4]),
+            (8, vec![1, 2, 4, 8]),
 
-        let result: u128 = int_sqrt(81);
-        assert_eq!(result, 9);
+        ];
+
+        for (input, expected_output) in test_cases {
+            assert_eq!(all_divisors(input), expected_output);
+        }
     }
+
+    #[test]
+    fn test_int_sqrt() {
+        let test_cases: Vec<(u128, u128)> = vec![
+            (0, 0),
+            (1, 1),
+            (2, 1),
+            (3, 1),
+            (4, 2),
+            (30, 5),
+            (std::u128::MAX, std::u64::MAX as u128),
+            (std::u128::MAX - 1, std::u64::MAX as u128),
+            (340282366920938463389587631136930004996, 18446744073709551614),
+            (std::u64::MAX as u128 + 1, std::u32::MAX as u128 + 1),
+            (std::u32::MAX as u128 + 1, std::u16::MAX as u128 + 1),
+
+        ];
+
+        for (input, expected_output) in test_cases {
+            assert_eq!(int_sqrt(input), expected_output);
+        }
+    }
+
 }
