@@ -1,9 +1,8 @@
+// https://projecteuler.net/problem=5
+
+use crate::{maths, time_solutions};
 #[allow(unused_imports)]
 use std::{collections::HashMap, time::Instant};
-use crate::{
-    maths,
-    time_solutions,
-};
 
 #[allow(dead_code)]
 fn solution_1(limit: u128) {
@@ -18,7 +17,7 @@ fn solution_1(limit: u128) {
     }
 
     for i in 2..=limit {
-        let temp_map: HashMap<u128, u128> = maths::prime_factors_with_sieve_as_hashmap(i);
+        let temp_map: HashMap<u128, u128> = maths::prime_factors_of_n_with_sieve_as_hashmap(i);
         for (&key, &val) in temp_map.iter() {
             primes_map.insert(key, u128::max(val, *primes_map.get(&key).unwrap()));
         }
@@ -35,7 +34,5 @@ fn solution_1(limit: u128) {
 pub fn solve() {
     let limit: u128 = 10;
 
-    time_solutions!(
-        solution_1(limit)
-    );
+    time_solutions!(solution_1(limit));
 }

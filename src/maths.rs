@@ -1,6 +1,590 @@
 use std::collections::HashMap;
 
-#[allow(dead_code)]
+#[allow(dead_code)] // TODO
+/// Returns the primes and their frequencies of the result of Combinations(n, r)
+///
+/// **Combinations** : Choosing `r` things from `n` distinct objects without order.
+///
+/// This function is equivalent to `prime_factors_with_sieve_as_hashmap(n! / (r! * (n - r)!))`
+///
+/// if `n == 0` or `n == 1`, a HashMap of `{1: 1}` is returned.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number of distinct objects.
+/// * `r` : `u128` - Sample size.
+///
+/// ### Returns
+///
+/// * `HashMap<u128, u128>` - prime factors and their frequencies in `n! / (r! * (n - r)!)`.
+///
+/// ### Panics
+///
+/// When `r > n`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::combinations as f;
+/// use std::collections::HashMap;
+///
+/// assert_eq!(f(0, 0), HashMap::from_iter(vec![(1, 1)]));
+/// assert_eq!(f(1, 1), HashMap::from_iter(vec![(1, 1)]));
+/// assert_eq!(f(2, 1), HashMap::from_iter(vec![(1, 1), (2, 1)]));
+/// assert_eq!(f(7, 3), HashMap::from_iter(vec![(1, 1), (5, 1), (7, 1)]));
+/// assert_eq!(f(10, 8), HashMap::from_iter(vec![(1, 1), (3, 2), (5, 1)]));
+/// assert_eq!(f(13, 3), HashMap::from_iter(vec![(1, 1), (2, 1), (11, 1), (13, 1)]));
+/// ```
+pub fn combinations(n: u128, r: u128) -> HashMap<u128, u128> {
+    if r > n {
+        panic!(
+            "{}",
+            format!("r : {} cannot be greater than n : {} in combinations", r, n)
+        );
+    }
+
+    let mut n_factorial: HashMap<u128, u128> = factorial(n);
+    let r_factorial: HashMap<u128, u128> = factorial(r);
+    let n_minus_r_factorial: HashMap<u128, u128> = factorial(n - r);
+
+    // combining hashmaps of `r_factorial` and `n_minus_r_factorial`.
+    for (n_minus_r_prime, n_minus_r_prime_frequency) in n_minus_r_factorial.iter() {
+        n_factorial
+            .entry(*n_minus_r_prime)
+            .and_modify(|numerator_value: &mut u128| *numerator_value -= n_minus_r_prime_frequency);
+    }
+
+    n_factorial.retain(|_, &mut value| value != 0);
+
+    for (r_prime, r_prime_frequency) in r_factorial.iter() {
+        n_factorial
+            .entry(*r_prime)
+            .and_modify(|numerator_value: &mut u128| *numerator_value -= r_prime_frequency);
+    }
+
+    n_factorial.retain(|_, &mut value| value != 0);
+    n_factorial.insert(1, 1);
+
+    return n_factorial;
+}
+
+#[allow(dead_code)] // TODO
+/// Constructs a number from a hashmap of prime factors with their frequency
+///
+/// If the input map is empty then 0 is returned.
+///
+/// ### Arguments
+///
+/// * `map` : `HashMap<u128, u128>` - The Hashmap containing prime factrors and their frequencies
+///
+/// ### Returns
+///
+/// * `u128` - number constructed from `map`.
+///
+/// ### Panics
+///
+/// If overflow occurs while constructing the result
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::construct_number_from_prime_factor_hashmap as f;
+/// use std::collections::HashMap;
+///
+/// assert_eq!(f(HashMap::new()), 0);
+/// assert_eq!(f(HashMap::from_iter(vec![(1, 1)])), 1);
+/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (2, 1)])), 2);
+/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (5, 1), (7, 1)])), 35);
+/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (3, 2), (5, 1)])), 45);
+/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (2, 1), (11, 1), (13, 1)])), 286);
+/// ```
+pub fn construct_number_from_prime_factor_hashmap(map: HashMap<u128, u128>) -> u128 {
+    let all_values_are_0: bool = map.values().all(|value: &u128| *value == 0);
+
+    if map.is_empty() {
+        return 0;
+    }
+
+    if all_values_are_0 && !map.is_empty() {
+        return 1;
+    }
+
+    let mut ans: u128 = 1;
+
+    for (prime, prime_frequency) in map.iter() {
+        for _ in 0..(*prime_frequency) {
+            let result: Option<u128> = ans.checked_mul(*prime);
+
+            match result {
+                Some(value) => ans = value,
+                None => {
+                    panic!(
+                        "{}",
+                        format!("Overflow occured while converting : {:?}", map)
+                    )
+                }
+            };
+        }
+    }
+
+    return ans;
+}
+
+#[allow(dead_code)] // TODO
+/// Returns the primes and their frequencies of the result of Permutations(n, r)
+///
+/// Assuming 1 is a prime to make life easier.
+///
+/// **Permutations** : Arranging `n` distinct things in `r` slots, order matters
+///
+/// This function is equivalent to `prime_factors_with_sieve_as_hashmap(n! / (n - r)!)`
+///
+/// if `n == 0` or `n == 1` then Hashmap of `{1: 1}` is returned.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - Number of distinct objects.
+/// * `r` : `u128` - Slot size.
+///
+/// ### Returns
+///
+/// * `HashMap<u128, u128>` - prime factors and their frequencies in the result of `n! / (n - r)!`.
+///
+/// ### Panics
+///
+/// When `r > n`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::permutations as f;
+/// use std::collections::HashMap;
+///
+/// assert_eq!(f(0, 0), HashMap::from_iter(vec![(1, 1)]));
+/// assert_eq!(f(1, 1), HashMap::from_iter(vec![(1, 1)]));
+/// assert_eq!(f(2, 1), HashMap::from_iter(
+///     vec![(1, 1), (2, 1)]
+/// ));
+/// assert_eq!(f(7, 3), HashMap::from_iter(
+///     vec![
+///         (1, 1),
+///         (2, 1),
+///         (3, 1),
+///         (5, 1),
+///         (7, 1),
+///     ]
+/// ));
+/// assert_eq!(f(10, 8), HashMap::from_iter(
+///     vec![
+///         (1, 1),
+///         (2, 7),
+///         (3, 4),
+///         (5, 2),
+///         (7, 1),
+///     ]
+/// ));
+/// assert_eq!(f(13, 3), HashMap::from_iter(
+///     vec![
+///         (1, 1),
+///         (2, 2),
+///         (3, 1),
+///         (11, 1),
+///         (13, 1),
+///     ]
+/// ));
+/// ```
+pub fn permutations(n: u128, r: u128) -> HashMap<u128, u128> {
+    if r > n {
+        panic!(
+            "{}",
+            format!("r : {} cannot be greater than n : {} in permutation", r, n)
+        );
+    }
+
+    let mut n_factorial: HashMap<u128, u128> = factorial(n);
+    let n_minus_r_factorial: HashMap<u128, u128> = factorial(n - r);
+
+    for (denominator_prime, denominator_prime_frequency) in n_minus_r_factorial.iter() {
+        n_factorial
+            .entry(*denominator_prime)
+            .and_modify(|numerator_value: &mut u128| {
+                *numerator_value -= denominator_prime_frequency
+            });
+    }
+
+    n_factorial.retain(|_, &mut value| value != 0);
+    n_factorial.insert(1, 1);
+
+    return n_factorial;
+}
+
+#[allow(dead_code)] // DONE
+/// Return the prime factors and their frequencies in the factorial of `n`.
+///
+/// For example : `7! = 5040` . The prime factors with their frequency of `5040` = {2: 4, 3: 2, 5: 1, 7: 1}
+///
+///  i.e. `5040 = (2 * 2 * 2 * 2) * (3 * 3) * 5 * 7`
+///
+/// If `n == 0` or `n == 1` , an empty `HashMap` is returned. (meaning `0! = 1` or `1! = 1`)
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number for which we need to find the factorial.
+///
+/// ### Returns
+///
+/// * `HashMap<u128, u128>` - prime factors and their frequencies in `n!`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::factorial as f;
+/// use std::collections::HashMap;
+///
+/// assert_eq!(f(0), HashMap::new());
+/// assert_eq!(f(1), HashMap::new());
+/// assert_eq!(f(2), HashMap::from_iter(vec![(2, 1)]));
+/// assert_eq!(f(7), HashMap::from_iter(vec![(2, 4), (3, 2), (5, 1), (7, 1)]));
+/// assert_eq!(f(10), HashMap::from_iter(vec![(2, 8), (3, 4), (5, 2), (7, 1) ]));
+/// assert_eq!(f(13), HashMap::from_iter(vec![(2, 10), (3, 5), (5, 2), (7, 1), (11, 1), (13, 1)]));
+/// ```
+pub fn factorial(n: u128) -> HashMap<u128, u128> {
+    let mut ans: HashMap<u128, u128> = HashMap::new();
+
+    if n == 0 || n == 1 {
+        return HashMap::new();
+    }
+
+    for i in 2..=n {
+        let primes_map: HashMap<u128, u128> = prime_factors_of_n_with_sieve_as_hashmap(i);
+
+        for (temp_prime, temp_prime_frequency) in primes_map.iter() {
+            if ans.contains_key(temp_prime) {
+                ans.entry(*temp_prime)
+                    .and_modify(|value: &mut u128| *value += temp_prime_frequency);
+            } else {
+                ans.insert(*temp_prime, *temp_prime_frequency);
+            }
+        }
+    }
+
+    return ans;
+}
+
+#[allow(dead_code)] // DONE
+/// Returns whether a number is prime number or not
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number that we need to check for primality.
+///
+/// ### Returns
+///
+/// * `bool` - `true` or `false` based on primality test.
+///
+/// ### Panics
+///
+/// * When `n == 0`
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::is_prime as f;
+///
+/// assert_eq!(f(1), false);
+/// assert_eq!(f(2), true);
+/// assert_eq!(f(5), true);
+/// assert_eq!(f(8), false);
+///
+/// ```
+pub fn is_prime(n: u128) -> bool {
+    if n == 0 {
+        panic!("n cannot be 0.")
+    }
+    if n < 2 {
+        return false;
+    }
+
+    if n % 2 == 0 {
+        return n == 2;
+    }
+
+    for i in (3..=int_sqrt(n)).step_by(2) {
+        if n % i == 0 {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+#[allow(dead_code)] // DONE
+/// Returns the Collatz sequence of `n`.
+///
+/// If `n == 0`, an empty Vector is returned.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number for which we need to find Collatz sequence.
+///
+/// ### Returns
+///
+/// * `Vec<u128>` - Collatz sequence of `n`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::collatz_sequence as f;
+///
+/// assert_eq!(f(0), vec![]);
+/// assert_eq!(f(1), vec![1]);
+/// assert_eq!(f(2), vec![2, 1]);
+/// assert_eq!(f(14), vec![14, 7, 22, 11, 34, 17, 52, 26, 13, 40, 20,
+///     10, 5, 16, 8, 4, 2, 1]);
+/// assert_eq!(f(22), vec![22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1]);
+/// assert_eq!(f(79), vec![79, 238, 119, 358, 179, 538, 269, 808, 404, 202, 101,
+///     304, 152, 76, 38, 19, 58, 29, 88, 44, 22, 11, 34, 17, 52, 26,
+///     13, 40, 20, 10, 5, 16, 8, 4, 2, 1]);
+/// ```
+pub fn collatz_sequence(n: u128) -> Vec<u128> {
+    let mut ans: Vec<u128> = Vec::new();
+    if n == 0 {
+        return ans;
+    }
+
+    let mut n: u128 = n;
+
+    while n != 1 {
+        match n % 2 == 0 {
+            true => {
+                ans.push(n);
+                n = n / 2;
+            }
+            false => {
+                ans.push(n);
+                n = (3 * n) + 1;
+            }
+        }
+    }
+
+    ans.push(1);
+
+    return ans;
+}
+
+#[allow(dead_code)] // DONE
+/// Returns the length of Collatz sequence of `n`.
+///
+/// If `n == 0`, `0` is returned.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number for which we need to find the length of Collatz sequence.
+///
+/// ### Returns
+///
+/// * `u128` - length of Collatz sequence of `n`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::collatz_sequence_length as f;
+///
+/// assert_eq!(f(0), 0);
+/// assert_eq!(f(1), 1);
+/// assert_eq!(f(2), 2);
+/// assert_eq!(f(14), 18);
+/// assert_eq!(f(22), 16);
+/// assert_eq!(f(79), 36);
+/// ```
+pub fn collatz_sequence_length(n: u128) -> u128 {
+    let mut length: u128 = 0;
+
+    if n == 0 {
+        return length;
+    }
+
+    let mut n: u128 = n;
+
+    while n != 1 {
+        match n % 2 == 0 {
+            true => {
+                length += 1;
+                n = n / 2;
+            }
+            false => {
+                length += 1;
+                n = (3 * n) + 1;
+            }
+        }
+    }
+
+    length += 1;
+
+    return length;
+}
+
+#[allow(dead_code)] // DONE
+/// Returns the `n`<sup>th</sup> prime number.
+///
+/// Uses [`first_n_primes`] to generate the first `n` primes and returns the last in the list.
+///
+/// [`first_n_primes`]: fn.first_n_primes.html
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The position of prime number to be returned with __1-based indexing__.
+///
+/// ### Returns
+///
+/// * `u128` - the `n`<sup>th</sup> prime number.
+///
+/// ### Panics
+///
+/// * When `n == 0`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::nth_prime as f;
+///
+/// assert_eq!(f(1), 2);
+/// assert_eq!(f(2), 3);
+/// assert_eq!(f(4), 7);
+/// assert_eq!(f(888), 6907);
+///
+/// ```
+pub fn nth_prime(n: u128) -> u128 {
+    if n == 0 {
+        panic!("n CANNOT be 0");
+    }
+    return *first_n_primes(n).last().unwrap();
+}
+
+#[allow(dead_code)] // DONE
+/// Returns the first `n` prime numbers.
+///
+/// _It does not uses_ [`sieve_of_eratosthenes`].
+///
+/// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number of primes that you want.
+///
+/// ### Returns
+///
+/// * `Vec<u128>` - List of first `n` prime numbers.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::first_n_primes as f;
+///
+/// assert_eq!(f(0), vec![]);
+/// assert_eq!(f(1), vec![2]);
+/// assert_eq!(f(2), vec![2, 3]);
+/// assert_eq!(f(5), vec![2, 3, 5, 7, 11]);
+/// ```
+pub fn first_n_primes(n: u128) -> Vec<u128> {
+    let mut ans: Vec<u128> = Vec::new();
+
+    if n == 0 {
+        return ans;
+    }
+
+    ans.push(2);
+
+    let mut curr_num: u128 = 3;
+
+    while (ans.len() as u128) < n {
+        if !ans.iter().any(|prime: &u128| curr_num % prime == 0) {
+            ans.push(curr_num);
+        }
+
+        curr_num += 2;
+    }
+
+    return ans;
+}
+
+#[allow(dead_code)] // DONE
+/// Returns the total number of divisors of `n` including `1` ans `n`.
+///
+/// If `n == 0`, then `0` is returned.
+///
+/// ### Alternate Functions
+///
+/// ```
+/// use std::collections::HashMap;
+/// use project_euler::maths::prime_factors_of_n_without_sieve_as_hashmap;
+///
+/// fn num_divisors(n: u128) -> u128 {
+///     if n == 0 {
+///         return 0;
+///     }
+///
+///     let primes_with_frequency: HashMap<u128, u128> = prime_factors_of_n_without_sieve_as_hashmap(n);
+///
+///     let mut num_of_divisors: u128 = 1;
+///
+///     for (_, value) in &primes_with_frequency {
+///         num_of_divisors *= *value + 1;
+///     }
+///
+///     return num_of_divisors;
+/// }
+///
+/// ```
+/// _It uses_ [`prime_factors_without_sieve_as_hashmap`].
+///
+/// [`prime_factors_without_sieve_as_hashmap`]: fn.prime_factors_without_sieve_as_hashmap.html
+///
+/// It is slower compared to the one actually used.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number for which we need to find the total number of divisors.
+///
+/// ### Returns
+///
+/// * `u128` - The total number of divisors of `n`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::num_divisors as f;
+///
+/// assert_eq!(f(1), 1);
+/// assert_eq!(f(2), 2);
+/// assert_eq!(f(23), 2);
+/// assert_eq!(f(100), 9);
+/// assert_eq!(f(5040), 60);
+///
+/// ```
+pub fn num_divisors(n: u128) -> u128 {
+    if n == 0 {
+        return 0;
+    }
+
+    let mut count: u128 = 0;
+
+    let sqrt: u128 = int_sqrt(n);
+
+    for i in 1..=sqrt {
+        if n % i == 0 {
+            count += 2;
+        }
+    }
+
+    if sqrt * sqrt == n {
+        count -= 1;
+    }
+
+    return count;
+}
+
+#[allow(dead_code)] // DONE
 /// Returns all the divisors of `n` including `1` and `n`.
 ///
 /// If `n == 0`, an empty Vector is returned.
@@ -62,232 +646,7 @@ pub fn all_divisors(n: u128) -> Vec<u128> {
     return divisors;
 }
 
-#[allow(dead_code)]
-/// Returns the first `n` prime numbers.
-///
-/// _It does not uses_ [`sieve_of_eratosthenes`].
-///
-/// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
-///
-/// ### Arguments
-///
-/// * `n` : `u128` - The number of primes that you want.
-///
-/// ### Returns
-///
-/// * `Vec<u128>` - List of first `n` prime numbers.
-///
-/// ### Examples
-///
-/// ```
-/// use project_euler::maths::first_n_primes as f;
-///
-/// assert_eq!(f(0), vec![]);
-/// assert_eq!(f(1), vec![2]);
-/// assert_eq!(f(2), vec![2, 3]);
-/// assert_eq!(f(5), vec![2, 3, 5, 7, 11]);
-/// ```
-pub fn first_n_primes(n: u128) -> Vec<u128> {
-    let mut ans: Vec<u128> = Vec::new();
-
-    if n == 0 {
-        return ans;
-    }
-
-    ans.push(2);
-
-    let mut curr_num: u128 = 3;
-
-    while (ans.len() as u128) < n {
-        if !ans.iter().any(|prime: &u128| curr_num % prime == 0) {
-            ans.push(curr_num);
-        }
-
-        curr_num += 2;
-    }
-
-    return ans;
-}
-
-#[allow(dead_code)]
-/// Returns the floored square root of `n` using binary search.
-///
-/// ### Alternate Functions
-///
-/// ```
-/// fn int_sqrt(n: u128) -> u128 {
-///     return (n as f64).sqrt() as u128;
-/// }
-///
-/// ```
-///
-/// Faster but gives wrong results when `n` is large.
-///
-/// ```
-/// fn int_sqrt(n: u128) -> u128 {
-///     return (n as f64).sqrt() as u128;
-/// }
-///
-/// let n: u128 = std::u64::MAX as u128; // 18446744073709551615
-///
-/// let square: u128 = n * n; // 340282366920938463426481119284349108225
-///
-/// assert_ne!(int_sqrt(square), n);  // because int_sqrt(square) returns 18446744073709551616
-///
-/// ```
-///
-/// ### Arguments
-///
-/// * `n` : `u128` - The number whose square root we need.
-///
-/// ### Returns
-///
-/// * `u128` - Square root of `n`.
-///
-/// ### Examples
-///
-/// ```
-/// use project_euler::maths::int_sqrt as f;
-///
-/// assert_eq!(f(0), 0);
-/// assert_eq!(f(1), 1);
-/// assert_eq!(f(8), 2);
-/// assert_eq!(f(9), 3);
-///
-/// ```
-pub fn int_sqrt(n: u128) -> u128 {
-    if n < 2 {
-        return n;
-    }
-
-    let mut low: u128 = 1;
-    let mut high: u128 = std::u64::MAX as u128;
-
-    while low <= high {
-        let mid: u128 = low + (high - low) / 2;
-        let mid_squared: u128 = mid * mid;
-
-        if mid_squared == n {
-            return mid;
-        } else if mid_squared < n {
-            low = mid + 1;
-        } else {
-            high = mid - 1;
-        }
-    }
-
-    return high;
-}
-
-#[allow(dead_code)]
-/// Returns whether a number is palindrome or not
-///
-/// ### Arguments
-///
-/// * `n` : `u128` - The number that we need to check.
-///
-/// ### Returns
-///
-/// * `bool` - `true` or `false` based on whether palindrome or not.
-///
-/// ### Examples
-///
-/// ```
-/// use project_euler::maths::is_palindrome as f;
-///
-/// assert_eq!(f(1), true);
-/// assert_eq!(f(2000), false);
-/// assert_eq!(f(10000001), true);
-/// assert_eq!(f(12345678987654321), true);
-///
-/// ```
-pub fn is_palindrome(n: u128) -> bool {
-    let mut reversed: u128 = 0;
-    let mut number: u128 = n;
-
-    while number > 0 {
-        reversed = reversed * 10 + number % 10;
-        number = number / 10;
-    }
-
-    return reversed == n;
-}
-
-#[allow(dead_code)]
-/// Returns whether `n` is a perfect square or not
-///
-/// if `n == 0` , `true` is returned.
-///
-/// ### Arguments
-///
-/// * `n` : `u128` - The number that needs to be checked.
-///
-/// ### Returns
-///
-/// * `bool` - Whether `n` is a perfect square or not.
-///
-/// ### Examples
-///
-/// ```
-/// use project_euler::maths::is_perfect_square as f;
-///
-/// assert_eq!(f(0), true);
-/// assert_eq!(f(1), true);
-/// assert_eq!(f(2), false);
-/// assert_eq!(f(4), true);
-/// assert_eq!(f(100), true);
-/// assert_eq!(f(999), false);
-///
-/// ```
-pub fn is_perfect_square(n: u128) -> bool {
-    if int_sqrt(n) * int_sqrt(n) == n {
-        return true;
-    }
-
-    return false;
-}
-
-#[allow(dead_code)]
-/// Returns whether a number is prime number or not
-///
-/// ### Arguments
-///
-/// * `n` : `u128` - The number that we need to check for primality.
-///
-/// ### Returns
-///
-/// * `bool` - `true` or `false` based on primality test.
-///
-/// ### Examples
-///
-/// ```
-/// use project_euler::maths::is_prime as f;
-///
-/// assert_eq!(f(1), false);
-/// assert_eq!(f(2), true);
-/// assert_eq!(f(5), true);
-/// assert_eq!(f(8), false);
-///
-/// ```
-pub fn is_prime(n: u128) -> bool {
-    if n < 2 {
-        return false;
-    }
-
-    if n % 2 == 0 {
-        return n == 2;
-    }
-
-    for i in (3..=int_sqrt(n)).step_by(2) {
-        if n % i == 0 {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-#[allow(dead_code)]
+#[allow(dead_code)] // DONE
 /// Returns the maximum product of `n_adjacent` adjacent numbers in a grid of any size
 ///
 /// The function checks for maximum product horizontally, vertically, and along the directions of both diagonals.
@@ -423,7 +782,7 @@ pub fn max_prod_in_grid(grid: Vec<Vec<u128>>, n_adjacent: u128) -> u128 {
     return max_prod;
 }
 
-#[allow(dead_code)]
+#[allow(dead_code)] // DONE
 /// Returns the maximum sum of `n_adjacent` adjacent numbers in a grid of any size
 ///
 /// The function checks for maximum sum horizontally, vertically, and along the directions of both diagonals.
@@ -559,127 +918,154 @@ pub fn max_sum_in_grid(grid: Vec<Vec<u128>>, n_adjacent: u128) -> u128 {
     return max_sum;
 }
 
-#[allow(dead_code)]
-/// Returns the `n`<sup>th</sup> prime number.
-///
-/// Uses [`first_n_primes`] to generate the first `n` primes and returns the last in the list.
-///
-/// [`first_n_primes`]: fn.first_n_primes.html
-///
-/// ### Arguments
-///
-/// * `n` : `u128` - The position of prime number to be returned with __1-based indexing__.
-///
-/// ### Returns
-///
-/// * `u128` - the `n`<sup>th</sup> prime number.
-///
-/// ### Panics
-///
-/// * When `n == 0`.
-///
-/// ### Examples
-///
-/// ```
-/// use project_euler::maths::nth_prime as f;
-///
-/// assert_eq!(f(1), 2);
-/// assert_eq!(f(2), 3);
-/// assert_eq!(f(4), 7);
-/// assert_eq!(f(888), 6907);
-///
-/// ```
-pub fn nth_prime(n: u128) -> u128 {
-    if n == 0 {
-        panic!("n CANNOT be 0");
-    }
-    return *first_n_primes(n).last().unwrap();
-}
-
-#[allow(dead_code)]
-/// Returns the total number of divisors of `n` including `1` ans `n`.
-///
-/// If `n == 0`, then `0` is returned.
+#[allow(dead_code)] // DONE
+/// Returns the floored square root of `n` using binary search.
 ///
 /// ### Alternate Functions
 ///
 /// ```
-/// use std::collections::HashMap;
-/// use project_euler::maths::prime_factors_without_sieve_as_hashmap;
-///
-/// fn num_divisors(n: u128) -> u128 {
-///     if n == 0 {
-///         return 0;
-///     }
-///
-///     let primes_with_frequency: HashMap<u128, u128> = prime_factors_without_sieve_as_hashmap(n);
-///
-///     let mut num_of_divisors: u128 = 1;
-///
-///     for (_, value) in &primes_with_frequency {
-///         num_of_divisors *= *value + 1;
-///     }
-///
-///     return num_of_divisors;
+/// fn int_sqrt(n: u128) -> u128 {
+///     return (n as f64).sqrt() as u128;
 /// }
 ///
 /// ```
-/// _It uses_ [`prime_factors_without_sieve_as_hashmap`].
 ///
-/// [`prime_factors_without_sieve_as_hashmap`]: fn.prime_factors_without_sieve_as_hashmap.html
+/// Faster but gives wrong results when `n` is large.
 ///
-/// It is slower compared to the one actually used.
+/// ```
+/// fn int_sqrt(n: u128) -> u128 {
+///     return (n as f64).sqrt() as u128;
+/// }
+///
+/// let n: u128 = std::u64::MAX as u128; // 18446744073709551615
+///
+/// let square: u128 = n * n; // 340282366920938463426481119284349108225
+///
+/// assert_ne!(int_sqrt(square), n);  // because int_sqrt(square) returns 18446744073709551616
+///
+/// ```
 ///
 /// ### Arguments
 ///
-/// * `n` : `u128` - The number for which we need to find the total number of divisors.
+/// * `n` : `u128` - The number whose square root we need.
 ///
 /// ### Returns
 ///
-/// * `u128` - The total number of divisors of `n`.
+/// * `u128` - Square root of `n`.
 ///
 /// ### Examples
 ///
 /// ```
-/// use project_euler::maths::num_divisors as f;
+/// use project_euler::maths::int_sqrt as f;
 ///
+/// assert_eq!(f(0), 0);
 /// assert_eq!(f(1), 1);
-/// assert_eq!(f(2), 2);
-/// assert_eq!(f(23), 2);
-/// assert_eq!(f(100), 9);
-/// assert_eq!(f(5040), 60);
+/// assert_eq!(f(8), 2);
+/// assert_eq!(f(9), 3);
 ///
 /// ```
-pub fn num_divisors(n: u128) -> u128 {
-    if n == 0 {
-        return 0;
+pub fn int_sqrt(n: u128) -> u128 {
+    if n < 2 {
+        return n;
     }
 
-    let mut count: u128 = 0;
+    let mut low: u128 = 1;
+    let mut high: u128 = std::u64::MAX as u128;
 
-    let sqrt: u128 = int_sqrt(n);
+    while low <= high {
+        let mid: u128 = low + (high - low) / 2;
+        let mid_squared: u128 = mid * mid;
 
-    for i in 1..=sqrt {
-        if n % i == 0 {
-            count += 2;
+        if mid_squared == n {
+            return mid;
+        } else if mid_squared < n {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
         }
     }
 
-    if sqrt * sqrt == n {
-        count -= 1;
-    }
-
-    return count;
+    return high;
 }
 
-#[allow(dead_code)]
+#[allow(dead_code)] // DONE
+/// Returns whether a number is palindrome or not
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number that we need to check.
+///
+/// ### Returns
+///
+/// * `bool` - `true` or `false` based on whether palindrome or not.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::is_palindrome as f;
+///
+/// assert_eq!(f(1), true);
+/// assert_eq!(f(2000), false);
+/// assert_eq!(f(10000001), true);
+/// assert_eq!(f(12345678987654321), true);
+///
+/// ```
+pub fn is_palindrome(n: u128) -> bool {
+    let mut reversed: u128 = 0;
+    let mut number: u128 = n;
+
+    while number > 0 {
+        reversed = reversed * 10 + number % 10;
+        number = number / 10;
+    }
+
+    return reversed == n;
+}
+
+#[allow(dead_code)] // DONE
+/// Returns whether `n` is a perfect square or not
+///
+/// if `n == 0` , `true` is returned.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number that needs to be checked.
+///
+/// ### Returns
+///
+/// * `bool` - Whether `n` is a perfect square or not.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::is_perfect_square as f;
+///
+/// assert_eq!(f(0), true);
+/// assert_eq!(f(1), true);
+/// assert_eq!(f(2), false);
+/// assert_eq!(f(4), true);
+/// assert_eq!(f(100), true);
+/// assert_eq!(f(999), false);
+///
+/// ```
+pub fn is_perfect_square(n: u128) -> bool {
+    if int_sqrt(n) * int_sqrt(n) == n {
+        return true;
+    }
+
+    return false;
+}
+
+#[allow(dead_code)] // DONE
 /// Returns a Hashmap with keys as primes and values as the number of times the prime is present in the number
 ///
-/// First we get a list of primes upto and including `n` with [`prime_factors_with_sieve_as_vec`].
+/// First we get a list of primes upto and including `n` with [`prime_factors_of_n_with_sieve_as_vec`].
 ///
-/// [`prime_factors_with_sieve_as_vec`]: fn.prime_factors_with_sieve_as_vec.html
+/// [`prime_factors_of_n_with_sieve_as_vec`]: fn.prime_factors_of_n_with_sieve_as_vec.html
 ///
 /// Then we check if each of the primes is a factor of `n` and if that is the case, then we find the number of times it is present in `n`.
+///
+/// If `n == 0` or `n == 1`, an empty Hashmap is returned.
 ///
 /// ### Arguments
 ///
@@ -692,7 +1078,7 @@ pub fn num_divisors(n: u128) -> u128 {
 /// ### Examples
 ///
 /// ```
-/// use project_euler::maths::prime_factors_with_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_with_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new();
@@ -705,7 +1091,7 @@ pub fn num_divisors(n: u128) -> u128 {
 /// ```
 ///
 /// ```
-/// use project_euler::maths::prime_factors_with_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_with_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new(); // empty hashmap
@@ -715,7 +1101,7 @@ pub fn num_divisors(n: u128) -> u128 {
 /// ```
 ///
 /// ```
-/// use project_euler::maths::prime_factors_with_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_with_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new();
@@ -725,7 +1111,7 @@ pub fn num_divisors(n: u128) -> u128 {
 /// ```
 ///
 /// ```
-/// use project_euler::maths::prime_factors_with_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_with_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new();
@@ -739,7 +1125,7 @@ pub fn num_divisors(n: u128) -> u128 {
 /// assert_eq!(f(30030), expected);
 ///
 /// ```
-pub fn prime_factors_with_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
+pub fn prime_factors_of_n_with_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
     let ans: Vec<u128> = sieve_of_eratosthenes(n);
 
     let mut n: u128 = n;
@@ -764,55 +1150,7 @@ pub fn prime_factors_with_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
     return primes_with_frequency;
 }
 
-#[allow(dead_code)]
-/// Returns a list of prime factors of the given number `n`.
-///
-/// First we find all the prime numbers less than or equal to `n` using [`sieve_of_eratosthenes`]
-///
-/// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
-///
-/// Then we check whether each of those prime is a factor of `n`.
-///
-/// ### Arguments
-///
-/// * `n` : `u128` - The number for which we have to find prime factors.
-///
-/// ### Returns
-///
-/// * `Vec<u128>` - List of prime factors of `n`.
-///
-/// ### Examples
-///
-/// ```
-/// use project_euler::maths::prime_factors_with_sieve_as_vec as f;
-///
-/// assert_eq!(f(1), vec![]);
-/// assert_eq!(f(7), vec![7]);
-/// assert_eq!(f(10), vec![2, 5]);
-/// assert_eq!(f(60), vec![2, 3, 5]);
-///
-/// ```
-pub fn prime_factors_with_sieve_as_vec(n: u128) -> Vec<u128> {
-    let primes: Vec<u128> = sieve_of_eratosthenes(n);
-
-    let mut index: usize = 0;
-    let number: u128 = n;
-
-    let mut ans: Vec<u128> = Vec::new();
-
-    while number > 1 && index < primes.len() {
-        let curr_prime: u128 = primes[index];
-
-        if number % curr_prime == 0 {
-            ans.push(curr_prime);
-        }
-        index += 1;
-    }
-
-    return ans;
-}
-
-#[allow(dead_code)]
+#[allow(dead_code)] // DONE
 /// Returns a Hashmap with keys as primes and values as their frequencies as present in the number
 ///
 /// First we get a list of primes upto and including `n` with [`primes_upto_n_without_sieve`].
@@ -820,6 +1158,8 @@ pub fn prime_factors_with_sieve_as_vec(n: u128) -> Vec<u128> {
 /// [`primes_upto_n_without_sieve`]: fn.primes_upto_n_without_sieve.html
 ///
 /// Then we check if each of these primes is a factor of `n` and if that is the case, then we find the number of times it is present in `n`.
+///
+/// If `n == 0` or `n == 1`, an empty Hashmap is returned.
 ///
 /// ### Arguments
 ///
@@ -832,7 +1172,7 @@ pub fn prime_factors_with_sieve_as_vec(n: u128) -> Vec<u128> {
 /// ### Examples
 ///
 /// ```
-/// use project_euler::maths::prime_factors_without_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_without_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new();
@@ -845,7 +1185,7 @@ pub fn prime_factors_with_sieve_as_vec(n: u128) -> Vec<u128> {
 /// ```
 ///
 /// ```
-/// use project_euler::maths::prime_factors_without_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_without_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new(); // empty hashmap
@@ -855,7 +1195,7 @@ pub fn prime_factors_with_sieve_as_vec(n: u128) -> Vec<u128> {
 /// ```
 ///
 /// ```
-/// use project_euler::maths::prime_factors_without_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_without_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new();
@@ -865,7 +1205,7 @@ pub fn prime_factors_with_sieve_as_vec(n: u128) -> Vec<u128> {
 /// ```
 ///
 /// ```
-/// use project_euler::maths::prime_factors_without_sieve_as_hashmap as f;
+/// use project_euler::maths::prime_factors_of_n_without_sieve_as_hashmap as f;
 /// use std::collections::HashMap;
 ///
 /// let mut expected: HashMap<u128, u128> = HashMap::new();
@@ -879,7 +1219,7 @@ pub fn prime_factors_with_sieve_as_vec(n: u128) -> Vec<u128> {
 /// assert_eq!(f(30030), expected);
 ///
 /// ```
-pub fn prime_factors_without_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
+pub fn prime_factors_of_n_without_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
     let primes: Vec<u128> = primes_upto_n_without_sieve(n);
 
     let mut n: u128 = n;
@@ -904,10 +1244,12 @@ pub fn prime_factors_without_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
     return factors_with_frequency;
 }
 
-#[allow(dead_code)]
-/// Returns a list of prime factors of the given number `n` without using [`sieve_of_eratosthenes`]
+#[allow(dead_code)] // DONE
+/// Returns a list of prime factors of the given number `n` using [`sieve_of_eratosthenes`]
 ///
 /// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
+///
+/// If `n == 0` or `n == 1`, an empty vector (`vec![]`) is returned.
 ///
 /// ### Arguments
 ///
@@ -920,7 +1262,59 @@ pub fn prime_factors_without_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
 /// ### Examples
 ///
 /// ```
-/// use project_euler::maths::prime_factors_without_sieve_as_vec as f;
+/// use project_euler::maths::prime_factors_of_n_with_sieve_as_vec as f;
+///
+/// assert_eq!(f(0), vec![]);
+/// assert_eq!(f(1), vec![]);
+/// assert_eq!(f(7), vec![7]);
+/// assert_eq!(f(6), vec![2, 3]);
+/// assert_eq!(f(10), vec![2, 5]);
+/// assert_eq!(f(60), vec![2, 3, 5]);
+///
+/// ```
+pub fn prime_factors_of_n_with_sieve_as_vec(n: u128) -> Vec<u128> {
+    let primes: Vec<u128> = sieve_of_eratosthenes(n);
+
+    let mut index: usize = 0;
+    let number: u128 = n;
+
+    let mut ans: Vec<u128> = Vec::new();
+
+    while number > 1 && index < primes.len() {
+        let curr_prime: u128 = primes[index];
+
+        if number % curr_prime == 0 {
+            ans.push(curr_prime);
+        }
+        index += 1;
+    }
+
+    return ans;
+}
+
+#[allow(dead_code)] // DONE
+/// Returns a list of prime factors of the given number `n` without using [`sieve_of_eratosthenes`]
+///
+/// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
+///
+/// This function uses [`primes_upto_n_without_sieve`]
+///
+/// [`primes_upto_n_without_sieve`]: fn.primes_upto_n_without_sieve.html
+///
+/// If `n == 0` or `n == 1`, an empty vector (`vec![]`) is returned.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number for which we have to find prime factors.
+///
+/// ### Returns
+///
+/// * `Vec<u128>` - List of prime factors of `n`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::prime_factors_of_n_without_sieve_as_vec as f;
 ///
 /// assert_eq!(f(1), vec![]);
 /// assert_eq!(f(7), vec![7]);
@@ -928,7 +1322,7 @@ pub fn prime_factors_without_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> {
 /// assert_eq!(f(60), vec![2, 3, 5]);
 ///
 /// ```
-pub fn prime_factors_without_sieve_as_vec(n: u128) -> Vec<u128> {
+pub fn prime_factors_of_n_without_sieve_as_vec(n: u128) -> Vec<u128> {
     let primes: Vec<u128> = primes_upto_n_without_sieve(n);
 
     let mut factors: Vec<u128> = Vec::new();
@@ -942,10 +1336,12 @@ pub fn prime_factors_without_sieve_as_vec(n: u128) -> Vec<u128> {
     return factors;
 }
 
-#[allow(dead_code)]
+#[allow(dead_code)] // DONE
 /// Returns a list of primes upto and including `n` without using [`sieve_of_eratosthenes`] as it requires a lot of memory.
 ///
 /// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
+///
+/// If `n == 0` or `n == 1`, an empty vector (`vec![]`) is returned.
 ///
 /// ### Arguments
 ///
@@ -985,7 +1381,7 @@ pub fn primes_upto_n_without_sieve(n: u128) -> Vec<u128> {
     return ans;
 }
 
-#[allow(dead_code)]
+#[allow(dead_code)] // DONE
 /// Returns a list of primes upto the inclusive limit `n` using __sieve of eratosthenes__. [wiki](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
 ///
 /// It is done by iteratively marking the multiples of primes as composite upto the given limit. Once the algorithms stops, we are left with prime numbers
@@ -994,9 +1390,11 @@ pub fn primes_upto_n_without_sieve(n: u128) -> Vec<u128> {
 ///
 /// [`primes_upto_n_without_sieve`]: fn.primes_upto_n_without_sieve.html
 ///
+/// If `n == 0` or `n == 1`, an empty vector (`vec![]`) is returned.
+///
 /// ### Arguments
 ///
-/// * `n` : `u128` - the upper limit upto which we need to find primes.
+/// * `n` : `u128` - the inclusive upper limit upto which we need to find primes.
 ///
 /// ### Returns
 ///
@@ -1011,36 +1409,38 @@ pub fn primes_upto_n_without_sieve(n: u128) -> Vec<u128> {
 /// assert_eq!(f(1), vec![]);
 /// assert_eq!(f(3), vec![2, 3]);
 /// assert_eq!(f(10), vec![2, 3, 5, 7]);
+/// assert_eq!(f(11), vec![2, 3, 5, 7, 11]);
 ///
 /// ```
 pub fn sieve_of_eratosthenes(n: u128) -> Vec<u128> {
-    if n < 2 {
-        return Vec::new();
-    }
+    match n {
+        0 | 1 => return Vec::new(),
+        _ => {
+            let n: usize = n as usize;
 
-    let n: usize = n as usize;
+            let mut primes_true_or_false: Vec<bool> = vec![true; n + 1];
 
-    let mut primes_true_or_false: Vec<bool> = vec![true; n + 1];
+            primes_true_or_false[0] = false;
+            primes_true_or_false[1] = false;
 
-    primes_true_or_false[0] = false;
-    primes_true_or_false[1] = false;
-
-    for i in 2..=n {
-        if primes_true_or_false[i] {
-            for col in (i * i..=n).step_by(i) {
-                primes_true_or_false[col] = false;
+            for i in 2..=n {
+                if primes_true_or_false[i] {
+                    for col in (i * i..=n).step_by(i) {
+                        primes_true_or_false[col] = false;
+                    }
+                }
             }
+
+            let primes: Vec<u128> = primes_true_or_false
+                .iter()
+                .enumerate()
+                .filter(|&(_, &b)| b)
+                .map(|(a, _)| a as u128)
+                .collect::<Vec<u128>>();
+
+            return primes;
         }
     }
-
-    let primes: Vec<u128> = primes_true_or_false
-        .iter()
-        .enumerate()
-        .filter(|&(_, &b)| b)
-        .map(|(a, _)| a as u128)
-        .collect::<Vec<u128>>();
-
-    return primes;
 }
 
 #[cfg(test)]
@@ -1057,7 +1457,6 @@ mod tests {
             (3, vec![1, 3]),
             (4, vec![1, 2, 4]),
             (8, vec![1, 2, 4, 8]),
-
         ];
 
         for (input, expected_output) in test_cases {
@@ -1076,10 +1475,12 @@ mod tests {
             (30, 5),
             (std::u128::MAX, std::u64::MAX as u128),
             (std::u128::MAX - 1, std::u64::MAX as u128),
-            (340282366920938463389587631136930004996, 18446744073709551614),
+            (
+                340282366920938463389587631136930004996,
+                18446744073709551614,
+            ),
             (std::u64::MAX as u128 + 1, std::u32::MAX as u128 + 1),
             (std::u32::MAX as u128 + 1, std::u16::MAX as u128 + 1),
-
         ];
 
         for (input, expected_output) in test_cases {
@@ -1087,4 +1488,24 @@ mod tests {
         }
     }
 
+    #[test]
+    fn test_is_palindrome() {
+        let test_cases: Vec<(u128, bool)> = vec![
+            (0, true),
+            (3, true),
+            (1, true),
+            (8, true),
+            (10, false),
+            (11, true),
+            (28, false),
+            (121, true),
+            (999, true),
+            (889, false),
+            (123898321, true),
+        ];
+
+        for (input, expected_output) in test_cases {
+            assert_eq!(is_palindrome(input), expected_output);
+        }
+    }
 }

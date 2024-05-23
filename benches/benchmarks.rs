@@ -25,9 +25,8 @@ use std::time::Duration;
 /// * Add test cases to `black_box` as required
 /// * Change `sample_size`, `measurement_time` and `warm_up_time` as required.
 ///
-/// While running benchmark, sometimes cargo might ask you to increase `measurement_time`.
+/// While running benchmark, sometimes cargo might ask you to increase `measurement_time` or similar parameters.
 ///
-
 fn benchmark_num_divisors(c: &mut Criterion) {
     let nums = black_box([23, 57]);
     for num in nums {

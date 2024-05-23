@@ -21,7 +21,7 @@ fn main() {
         .collect();
 
     for problem in problem_numbers {
-        println!("===========================================================");
+        println!("=============================================================================");
         println!("Problem : {}", problem);
         match problem {
             1 => problems::problem_1::solve(),
@@ -38,9 +38,11 @@ fn main() {
             12 => problems::problem_12::solve(),
             13 => problems::problem_13::solve(),
             14 => problems::problem_14::solve(),
+            15 => problems::problem_15::solve(),
+            16 => problems::problem_16::solve(),
 
             _ => problems::problem::solve(),
         };
     }
-    println!("===========================================================")
+    println!("=============================================================================")
 }

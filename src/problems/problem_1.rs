@@ -1,3 +1,5 @@
+// https://projecteuler.net/problem=1
+
 #[allow(unused_imports)]
 use crate::{maths, time_solutions};
 
@@ -21,7 +23,5 @@ pub fn solve() {
     let limit: u128 = 1000;
     let multiples_of: Vec<u128> = vec![3, 5];
 
-    time_solutions!(
-        solution_1(limit, multiples_of)
-    );
+    time_solutions!(solution_1(limit, multiples_of));
 }

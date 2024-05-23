@@ -1,15 +1,11 @@
+// https://projecteuler.net/problem=13
+
 #[allow(unused_imports)]
-use crate::{
-    maths,
-    time_solutions,
-};
+use crate::{maths, time_solutions};
 
 #[allow(dead_code)]
 fn solution_1(nums: Vec<String>, first_n_digits: u128) {
-    let nums: Vec<Vec<char>> = nums
-        .iter()
-        .map(|s| s.chars().collect())
-        .collect();
+    let nums: Vec<Vec<char>> = nums.iter().map(|s| s.chars().collect()).collect();
 
     let mut digits: Vec<u8> = Vec::new();
 
@@ -27,13 +23,13 @@ fn solution_1(nums: Vec<String>, first_n_digits: u128) {
     }
     let num_digits_in_summ: usize = summ.to_string().len();
 
-    let ans: u128 = summ as u128 * 10_u128.pow(first_n_digits as u32 - num_digits_in_summ as u32) + digits[0..(first_n_digits as usize - num_digits_in_summ)]
-        .to_vec()
-        .iter()
-        .fold(0, |acc, digit| (acc as u128) * 10 + (*digit as u128));
+    let ans: u128 = summ as u128 * 10_u128.pow(first_n_digits as u32 - num_digits_in_summ as u32)
+        + digits[0..(first_n_digits as usize - num_digits_in_summ)]
+            .to_vec()
+            .iter()
+            .fold(0, |acc, digit| (acc as u128) * 10 + (*digit as u128));
 
     println!("Answer : {}", ans);
-
 }
 
 #[allow(dead_code)]
@@ -142,7 +138,5 @@ pub fn solve() {
     ];
     let first_n_digits: u128 = 10;
 
-    time_solutions!(
-        solution_1(nums, first_n_digits)
-    );
+    time_solutions!(solution_1(nums, first_n_digits));
 }

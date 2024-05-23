@@ -1,14 +1,13 @@
+// https://projecteuler.net/problem=14
+
+use crate::time_solutions;
 #[allow(unused_imports)]
 use std::collections::HashMap;
-use crate::time_solutions;
-
 
 #[allow(dead_code)]
 fn solution_1(limit: u128) {
-    // uses hashmap to store the sequence_lengths already created``
-
+    // uses hashmap to store the sequence_lengths already created
     fn helper(map: &mut HashMap<u128, u128>, number: u128, limit: u128) -> u128 {
-
         #[allow(unused_assignments)]
         let mut sequence_length: u128 = 1;
 
@@ -16,9 +15,7 @@ fn solution_1(limit: u128) {
             sequence_length = *map.get(&number).unwrap();
 
             return sequence_length;
-        }
-
-        else {
+        } else {
             if (number & 1) == 0 {
                 sequence_length = helper(map, number / 2, limit) + 1;
 
@@ -28,7 +25,6 @@ fn solution_1(limit: u128) {
                 // map.insert(number, sequence_length);
 
                 return sequence_length;
-
             } else {
                 sequence_length = helper(map, 3 * number + 1, limit) + 1;
 
@@ -60,6 +56,7 @@ fn solution_1(limit: u128) {
         number += 1;
     }
 
+    println!("Using Hashmap");
     println!("Answer : {}", ans);
 }
 
@@ -67,7 +64,5 @@ fn solution_1(limit: u128) {
 pub fn solve() {
     let limit: u128 = 1_000_000;
 
-    time_solutions!(
-        solution_1(limit)
-    );
+    time_solutions!(solution_1(limit));
 }

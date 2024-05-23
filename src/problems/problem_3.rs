@@ -1,8 +1,7 @@
+// https://projecteuler.net/problem=3
+
 #[allow(unused_imports)]
-use crate::{
-    maths,
-    time_solutions,
-};
+use crate::{maths, time_solutions};
 
 #[allow(dead_code)]
 fn solution_1(number: u128) {
@@ -36,8 +35,5 @@ fn solution_2(number: u128) {
 pub fn solve() {
     let number: u128 = 600851475143;
 
-    time_solutions!(
-        solution_1(number),
-        solution_2(number)
-    );
+    time_solutions!(solution_1(number), solution_2(number));
 }

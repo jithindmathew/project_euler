@@ -99,7 +99,7 @@ Run a single benchmark
 cargo bench -- <name>
 ```
 
-Go to `benches/benchmarks.rs` for more info on benchmark parameters.
+Refer `benches/benchmarks.rs` for more info on benchmark parameters.
 
 Benchmarking report is available at `target/criterion/report/`. Open `index.html` to view report.
 
