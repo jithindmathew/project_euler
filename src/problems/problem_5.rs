@@ -32,7 +32,7 @@ fn solution_1(limit: u128) {
 
 #[allow(dead_code)]
 pub fn solve() {
-    let limit: u128 = 10;
+    let limit: u128 = 20;
 
     time_solutions!(solution_1(limit));
 }

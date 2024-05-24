@@ -1,13 +1,15 @@
 use std::collections::HashMap;
 
-#[allow(dead_code)] // TODO
+#[allow(dead_code)] // DONE
 /// Returns the primes and their frequencies of the result of Combinations(n, r)
 ///
 /// **Combinations** : Choosing `r` things from `n` distinct objects without order.
 ///
 /// This function is equivalent to `prime_factors_with_sieve_as_hashmap(n! / (r! * (n - r)!))`
 ///
-/// if `n == 0` or `n == 1`, a HashMap of `{1: 1}` is returned.
+/// If `n == 0` or `n == 1`, an empty HashMap is returned.
+///
+/// If an empty Hashmap is returned, it means that Combinations(n, r) = 1
 ///
 /// ### Arguments
 ///
@@ -28,12 +30,12 @@ use std::collections::HashMap;
 /// use project_euler::maths::combinations as f;
 /// use std::collections::HashMap;
 ///
-/// assert_eq!(f(0, 0), HashMap::from_iter(vec![(1, 1)]));
-/// assert_eq!(f(1, 1), HashMap::from_iter(vec![(1, 1)]));
-/// assert_eq!(f(2, 1), HashMap::from_iter(vec![(1, 1), (2, 1)]));
-/// assert_eq!(f(7, 3), HashMap::from_iter(vec![(1, 1), (5, 1), (7, 1)]));
-/// assert_eq!(f(10, 8), HashMap::from_iter(vec![(1, 1), (3, 2), (5, 1)]));
-/// assert_eq!(f(13, 3), HashMap::from_iter(vec![(1, 1), (2, 1), (11, 1), (13, 1)]));
+/// assert_eq!(f(0, 0), HashMap::new());
+/// assert_eq!(f(1, 1), HashMap::new());
+/// assert_eq!(f(2, 1), HashMap::from_iter(vec![(2, 1)]));
+/// assert_eq!(f(7, 3), HashMap::from_iter(vec![(5, 1), (7, 1)]));
+/// assert_eq!(f(10, 8), HashMap::from_iter(vec![(3, 2), (5, 1)]));
+/// assert_eq!(f(13, 3), HashMap::from_iter(vec![(2, 1), (11, 1), (13, 1)]));
 /// ```
 pub fn combinations(n: u128, r: u128) -> HashMap<u128, u128> {
     if r > n {
@@ -47,7 +49,7 @@ pub fn combinations(n: u128, r: u128) -> HashMap<u128, u128> {
     let r_factorial: HashMap<u128, u128> = factorial(r);
     let n_minus_r_factorial: HashMap<u128, u128> = factorial(n - r);
 
-    // combining hashmaps of `r_factorial` and `n_minus_r_factorial`.
+    // combining hashmaps of `n_factorial` and `n_minus_r_factorial`.
     for (n_minus_r_prime, n_minus_r_prime_frequency) in n_minus_r_factorial.iter() {
         n_factorial
             .entry(*n_minus_r_prime)
@@ -56,6 +58,7 @@ pub fn combinations(n: u128, r: u128) -> HashMap<u128, u128> {
 
     n_factorial.retain(|_, &mut value| value != 0);
 
+    // combining hashmaps of `n_factorial` and `r_factorial`.
     for (r_prime, r_prime_frequency) in r_factorial.iter() {
         n_factorial
             .entry(*r_prime)
@@ -63,15 +66,14 @@ pub fn combinations(n: u128, r: u128) -> HashMap<u128, u128> {
     }
 
     n_factorial.retain(|_, &mut value| value != 0);
-    n_factorial.insert(1, 1);
 
     return n_factorial;
 }
 
-#[allow(dead_code)] // TODO
+#[allow(dead_code)] // DONE
 /// Constructs a number from a hashmap of prime factors with their frequency
 ///
-/// If the input map is empty then 0 is returned.
+/// If the input map is empty then 1 is returned.
 ///
 /// ### Arguments
 ///
@@ -91,21 +93,14 @@ pub fn combinations(n: u128, r: u128) -> HashMap<u128, u128> {
 /// use project_euler::maths::construct_number_from_prime_factor_hashmap as f;
 /// use std::collections::HashMap;
 ///
-/// assert_eq!(f(HashMap::new()), 0);
-/// assert_eq!(f(HashMap::from_iter(vec![(1, 1)])), 1);
-/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (2, 1)])), 2);
-/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (5, 1), (7, 1)])), 35);
-/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (3, 2), (5, 1)])), 45);
-/// assert_eq!(f(HashMap::from_iter(vec![(1, 1), (2, 1), (11, 1), (13, 1)])), 286);
+/// assert_eq!(f(HashMap::new()), 1);
+/// assert_eq!(f(HashMap::from_iter(vec![(2, 1)])), 2);
+/// assert_eq!(f(HashMap::from_iter(vec![(5, 1), (7, 1)])), 35);
+/// assert_eq!(f(HashMap::from_iter(vec![(3, 2), (5, 1)])), 45);
+/// assert_eq!(f(HashMap::from_iter(vec![(2, 1), (11, 1), (13, 1)])), 286);
 /// ```
 pub fn construct_number_from_prime_factor_hashmap(map: HashMap<u128, u128>) -> u128 {
-    let all_values_are_0: bool = map.values().all(|value: &u128| *value == 0);
-
     if map.is_empty() {
-        return 0;
-    }
-
-    if all_values_are_0 && !map.is_empty() {
         return 1;
     }
 
@@ -130,16 +125,16 @@ pub fn construct_number_from_prime_factor_hashmap(map: HashMap<u128, u128>) -> u
     return ans;
 }
 
-#[allow(dead_code)] // TODO
+#[allow(dead_code)] // DONE
 /// Returns the primes and their frequencies of the result of Permutations(n, r)
-///
-/// Assuming 1 is a prime to make life easier.
 ///
 /// **Permutations** : Arranging `n` distinct things in `r` slots, order matters
 ///
 /// This function is equivalent to `prime_factors_with_sieve_as_hashmap(n! / (n - r)!)`
 ///
-/// if `n == 0` or `n == 1` then Hashmap of `{1: 1}` is returned.
+/// if `n == 0` or `n == 1`, empty Hashmap is returned.
+///
+/// If an empty Hashmap is returned, it means that Permutations(n, r) = 1
 ///
 /// ### Arguments
 ///
@@ -160,14 +155,13 @@ pub fn construct_number_from_prime_factor_hashmap(map: HashMap<u128, u128>) -> u
 /// use project_euler::maths::permutations as f;
 /// use std::collections::HashMap;
 ///
-/// assert_eq!(f(0, 0), HashMap::from_iter(vec![(1, 1)]));
-/// assert_eq!(f(1, 1), HashMap::from_iter(vec![(1, 1)]));
+/// assert_eq!(f(0, 0), HashMap::new());
+/// assert_eq!(f(1, 1), HashMap::new());
 /// assert_eq!(f(2, 1), HashMap::from_iter(
-///     vec![(1, 1), (2, 1)]
+///     vec![(2, 1)]
 /// ));
 /// assert_eq!(f(7, 3), HashMap::from_iter(
 ///     vec![
-///         (1, 1),
 ///         (2, 1),
 ///         (3, 1),
 ///         (5, 1),
@@ -176,7 +170,6 @@ pub fn construct_number_from_prime_factor_hashmap(map: HashMap<u128, u128>) -> u
 /// ));
 /// assert_eq!(f(10, 8), HashMap::from_iter(
 ///     vec![
-///         (1, 1),
 ///         (2, 7),
 ///         (3, 4),
 ///         (5, 2),
@@ -185,7 +178,6 @@ pub fn construct_number_from_prime_factor_hashmap(map: HashMap<u128, u128>) -> u
 /// ));
 /// assert_eq!(f(13, 3), HashMap::from_iter(
 ///     vec![
-///         (1, 1),
 ///         (2, 2),
 ///         (3, 1),
 ///         (11, 1),
@@ -213,7 +205,6 @@ pub fn permutations(n: u128, r: u128) -> HashMap<u128, u128> {
     }
 
     n_factorial.retain(|_, &mut value| value != 0);
-    n_factorial.insert(1, 1);
 
     return n_factorial;
 }
