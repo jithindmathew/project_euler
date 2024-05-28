@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the primes and their frequencies of the result of Combinations(n, r)
 ///
 /// **Combinations** : Choosing `r` things from `n` distinct objects without order.
@@ -70,7 +70,7 @@ pub fn combinations(n: u128, r: u128) -> HashMap<u128, u128> {
     return n_factorial;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Constructs a number from a hashmap of prime factors with their frequency
 ///
 /// If the input map is empty then 1 is returned.
@@ -125,7 +125,7 @@ pub fn construct_number_from_prime_factor_hashmap(map: HashMap<u128, u128>) -> u
     return ans;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the primes and their frequencies of the result of Permutations(n, r)
 ///
 /// **Permutations** : Arranging `n` distinct things in `r` slots, order matters
@@ -209,7 +209,7 @@ pub fn permutations(n: u128, r: u128) -> HashMap<u128, u128> {
     return n_factorial;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Return the prime factors and their frequencies in the factorial of `n`.
 ///
 /// For example : `7! = 5040` . The prime factors with their frequency of `5040` = {2: 4, 3: 2, 5: 1, 7: 1}
@@ -262,7 +262,7 @@ pub fn factorial(n: u128) -> HashMap<u128, u128> {
     return ans;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns whether a number is prime number or not
 ///
 /// ### Arguments
@@ -309,7 +309,7 @@ pub fn is_prime(n: u128) -> bool {
     return true;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the Collatz sequence of `n`.
 ///
 /// If `n == 0`, an empty Vector is returned.
@@ -363,7 +363,7 @@ pub fn collatz_sequence(n: u128) -> Vec<u128> {
     return ans;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the length of Collatz sequence of `n`.
 ///
 /// If `n == 0`, `0` is returned.
@@ -415,7 +415,7 @@ pub fn collatz_sequence_length(n: u128) -> u128 {
     return length;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the `n`<sup>th</sup> prime number.
 ///
 /// Uses [`first_n_primes`] to generate the first `n` primes and returns the last in the list.
@@ -452,7 +452,7 @@ pub fn nth_prime(n: u128) -> u128 {
     return *first_n_primes(n).last().unwrap();
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the first `n` prime numbers.
 ///
 /// _It does not uses_ [`sieve_of_eratosthenes`].
@@ -499,7 +499,7 @@ pub fn first_n_primes(n: u128) -> Vec<u128> {
     return ans;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the total number of divisors of `n` including `1` ans `n`.
 ///
 /// If `n == 0`, then `0` is returned.
@@ -575,7 +575,7 @@ pub fn num_divisors(n: u128) -> u128 {
     return count;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns all the divisors of `n` including `1` and `n`.
 ///
 /// If `n == 0`, an empty Vector is returned.
@@ -637,7 +637,7 @@ pub fn all_divisors(n: u128) -> Vec<u128> {
     return divisors;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the maximum product of `n_adjacent` adjacent numbers in a grid of any size
 ///
 /// The function checks for maximum product horizontally, vertically, and along the directions of both diagonals.
@@ -773,7 +773,7 @@ pub fn max_prod_in_grid(grid: Vec<Vec<u128>>, n_adjacent: u128) -> u128 {
     return max_prod;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the maximum sum of `n_adjacent` adjacent numbers in a grid of any size
 ///
 /// The function checks for maximum sum horizontally, vertically, and along the directions of both diagonals.
@@ -909,7 +909,7 @@ pub fn max_sum_in_grid(grid: Vec<Vec<u128>>, n_adjacent: u128) -> u128 {
     return max_sum;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns the floored square root of `n` using binary search.
 ///
 /// ### Alternate Functions
@@ -979,7 +979,7 @@ pub fn int_sqrt(n: u128) -> u128 {
     return high;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns whether a number is palindrome or not
 ///
 /// ### Arguments
@@ -1013,7 +1013,7 @@ pub fn is_palindrome(n: u128) -> bool {
     return reversed == n;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns whether `n` is a perfect square or not
 ///
 /// if `n == 0` , `true` is returned.
@@ -1047,7 +1047,7 @@ pub fn is_perfect_square(n: u128) -> bool {
     return false;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns a Hashmap with keys as primes and values as the number of times the prime is present in the number
 ///
 /// First we get a list of primes upto and including `n` with [`prime_factors_of_n_with_sieve_as_vec`].
@@ -1141,7 +1141,7 @@ pub fn prime_factors_of_n_with_sieve_as_hashmap(n: u128) -> HashMap<u128, u128> 
     return primes_with_frequency;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns a Hashmap with keys as primes and values as their frequencies as present in the number
 ///
 /// First we get a list of primes upto and including `n` with [`primes_upto_n_without_sieve`].
@@ -1235,7 +1235,7 @@ pub fn prime_factors_of_n_without_sieve_as_hashmap(n: u128) -> HashMap<u128, u12
     return factors_with_frequency;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns a list of prime factors of the given number `n` using [`sieve_of_eratosthenes`]
 ///
 /// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
@@ -1283,7 +1283,7 @@ pub fn prime_factors_of_n_with_sieve_as_vec(n: u128) -> Vec<u128> {
     return ans;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns a list of prime factors of the given number `n` without using [`sieve_of_eratosthenes`]
 ///
 /// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
@@ -1327,7 +1327,7 @@ pub fn prime_factors_of_n_without_sieve_as_vec(n: u128) -> Vec<u128> {
     return factors;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns a list of primes upto and including `n` without using [`sieve_of_eratosthenes`] as it requires a lot of memory.
 ///
 /// [`sieve_of_eratosthenes`]: fn.sieve_of_eratosthenes.html
@@ -1372,7 +1372,7 @@ pub fn primes_upto_n_without_sieve(n: u128) -> Vec<u128> {
     return ans;
 }
 
-#[allow(dead_code)] // DONE
+#[allow(dead_code)]
 /// Returns a list of primes upto the inclusive limit `n` using __sieve of eratosthenes__. [wiki](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
 ///
 /// It is done by iteratively marking the multiples of primes as composite upto the given limit. Once the algorithms stops, we are left with prime numbers
@@ -1432,6 +1432,210 @@ pub fn sieve_of_eratosthenes(n: u128) -> Vec<u128> {
             return primes;
         }
     }
+}
+
+#[allow(dead_code)] // TODO
+/// Returns the value of `base` raised to `power` as a Vector of digits.
+///
+/// If `base == 0`, a vector containing digit 0 is returned.
+///
+/// If `base == 1`, a vector containing digit 1 is returned.
+///
+/// If `power == 0`, a vector containing digit 1 is returned.
+///
+/// ### Arguments
+///
+/// * `base` : `u128` - the base that you want to multiply itself `power`.
+/// * `power` : `u128` - the number of times you want to multiply `base` with itself.
+///
+/// ### Returns
+///
+/// * `Vec<u8>` - The digits of the answer in a Vector.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::get_power_of_a_number as f;
+///
+// / assert_eq!(f(0, 0), vec![0]);  // TODO
+// / assert_eq!(f(1), vec![]);
+// / assert_eq!(f(3), vec![2, 3]);
+// / assert_eq!(f(10), vec![2, 3, 5, 7]);
+// / assert_eq!(f(11), vec![2, 3, 5, 7, 11]);
+///
+/// ```
+pub fn get_power_of_a_number(base: Vec<u8>, power: Vec<u8>) -> Vec<u8> {
+    let index: Option<usize> = base.iter().position(|&x| x != 0);
+    let base: Vec<u8> = match index {
+        Some(index) => base[index..].to_vec(),
+        None => vec![0],
+    };
+
+    let index: Option<usize> = power.iter().position(|&x| x != 0);
+    let mut power: Vec<u8> = match index {
+        Some(index) => power[index..].to_vec(),
+        None => vec![1],
+    };
+
+    let mut answer: Vec<u8> = base.clone();
+
+    loop {
+        answer = multiply_two_numbers_as_vec(answer, base.clone());
+
+        let index: Option<usize> = power.iter().position(|&x| x != 0);
+        power = match index {
+            Some(index) => power[index..].to_vec(),
+            None => vec![1],
+        };
+
+        // subtract power by 1
+        let power_last_digit: u8 = *power.last().unwrap();
+        let power_vec_len: usize = power.len();
+
+        if power_last_digit == 2 && power_vec_len == 1 {
+            break;
+        }
+
+        if power_last_digit == 0 {
+            let mut carry: u8 = 1;
+
+            for (index, &digit) in power.clone().iter().rev().enumerate() {
+                if digit == 0 {
+                    power[power_vec_len - 1 - index] = 9;
+                } else {
+                    power[power_vec_len - 1 - index] = digit - 1;
+                    carry = 0;
+                }
+
+                if carry == 0 {
+                    break;
+                }
+            }
+
+            // power.reverse();
+        } else {
+            power[power_vec_len - 1] = power[power_vec_len - 1] - 1;
+        }
+    }
+
+    return answer;
+}
+
+#[allow(dead_code)] // TODO
+/// Returns the product of 2 numbers(in Vector of u8) as a Vector of u8.
+///
+/// If any of the number is `vec![0]`, `vec![0]` is returned.
+///
+/// If any of the number is `vec![1]`, the other number is returned.
+///
+/// ### Arguments
+///
+/// * `num1` : `Vec<u8>` - the first number in the form of vector of u8. If the actual number is `2453`, it should be passed in as `vec![2, 4, 5, 3]`
+/// * `num2` : `Vec<u8>` - the second number in the form of vector of u8.
+///
+/// ### Returns
+///
+/// * `Vec<u8>` - The digits of the answer in a Vector.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::get_power_of_a_number as f;
+///
+// / assert_eq!(f(0, 0), vec![0]);  // TODO
+// / assert_eq!(f(1), vec![]);
+// / assert_eq!(f(3), vec![2, 3]);
+// / assert_eq!(f(10), vec![2, 3, 5, 7]);
+// / assert_eq!(f(11), vec![2, 3, 5, 7, 11]);
+///
+/// ```
+pub fn multiply_two_numbers_as_vec(num1: Vec<u8>, num2: Vec<u8>) -> Vec<u8> {
+    if num1 == vec![0] || num2 == vec![0] {
+        return vec![0];
+    }
+
+    if num1 == vec![1] {
+        return num2;
+    }
+
+    if num2 == vec![1] {
+        return num1;
+    }
+
+    let mut ans_vec: Vec<u8> = vec![0; num1.len() + num2.len()];
+
+    for (index_num2, &digit_num2) in num2.iter().rev().enumerate() {
+        let mut product_vec: Vec<u8> = vec![0; index_num2];
+
+        // multiplication part
+        let mut carry_for_multiplication: u8 = 0;
+
+        for &digit_num1 in num1.iter().rev() {
+            let product: u8 = digit_num2 * digit_num1 + carry_for_multiplication;
+            let tens_place_digit: u8 = product / 10;
+            let ones_place_digit: u8 = product % 10;
+            carry_for_multiplication = tens_place_digit;
+            product_vec.push(ones_place_digit);
+        }
+
+        if carry_for_multiplication > 0 {
+            product_vec.push(carry_for_multiplication);
+        }
+
+        // adding part
+        let mut carry_for_adding: u8 = 0;
+
+        for (index, nums) in ans_vec
+            .clone()
+            .iter()
+            .zip(product_vec.iter().chain(std::iter::repeat(&0)))
+            .enumerate()
+        {
+            let sum: u8 = nums.0 + nums.1 + carry_for_adding;
+            let tens_place_digit: u8 = sum / 10;
+            let ones_place_digit: u8 = sum % 10;
+            carry_for_adding = tens_place_digit;
+            ans_vec[index] = ones_place_digit;
+        }
+
+        if carry_for_adding > 0 {
+            panic!(
+                "carry_for_adding : {} should be 0 at this point. \
+                There is something wrong with this function",
+                carry_for_adding
+            )
+        }
+    }
+
+    ans_vec.reverse();
+
+    let first_non_zero_position: Option<usize> = ans_vec.iter().position(|&x| x != 0);
+
+    return match first_non_zero_position {
+        Some(index) => ans_vec[index..].to_vec(),
+        None => vec![0],
+    };
+}
+
+// TODO
+pub fn u128_to_vecu8(u: u128) -> Vec<u8> {
+    if u == 0 {
+        return vec![0];
+    }
+
+    let mut n: u128 = u;
+
+    let mut digits: Vec<u8> = Vec::new();
+
+    while n > 0 {
+        let digit: u8 = (n % 10) as u8;
+        digits.push(digit);
+        n /= 10;
+    }
+
+    digits.reverse();
+
+    return digits;
 }
 
 #[cfg(test)]
