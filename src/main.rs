@@ -40,6 +40,8 @@ fn main() {
             14 => problems::problem_14::solve(),
             15 => problems::problem_15::solve(),
             16 => problems::problem_16::solve(),
+            17 => problems::problem_17::solve(),
+
 
             _ => problems::problem::solve(),
         };

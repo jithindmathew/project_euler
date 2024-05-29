@@ -9,6 +9,7 @@ fn solution_1(power: u128, base: u128) {
     let base_vec: Vec<u8> = maths::u128_to_vecu8(base);
 
     let ans_vec: Vec<u8> = maths::get_power_of_a_number(base_vec, power_vec);
+    println!("Answer : {:?}", ans_vec);
 
     let ans: u128 = ans_vec.iter().map(|&x| x as u128).sum::<u128>();
 

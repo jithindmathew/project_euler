@@ -109,7 +109,7 @@ References : [cargo-bench](https://doc.rust-lang.org/cargo/commands/cargo-bench.
 
 #### Why only 100 problems?
 
-Project Euler gives permission to publish slutions to first 100 problems only.
+Project Euler gives permission only to publish solutions to first 100 problems.
 
 ---
 

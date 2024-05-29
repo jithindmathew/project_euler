@@ -1434,7 +1434,7 @@ pub fn sieve_of_eratosthenes(n: u128) -> Vec<u128> {
     }
 }
 
-#[allow(dead_code)] // TODO
+#[allow(dead_code)]
 /// Returns the value of `base` raised to `power` as a Vector of digits.
 ///
 /// If `base == 0`, a vector containing digit 0 is returned.
@@ -1443,10 +1443,15 @@ pub fn sieve_of_eratosthenes(n: u128) -> Vec<u128> {
 ///
 /// If `power == 0`, a vector containing digit 1 is returned.
 ///
+/// If `power == 1`, `base` is returned.
+///
+/// If `base` or `power` is 345, then it should be passed in as `vec![3, 4, 5]`.
+///
 /// ### Arguments
 ///
-/// * `base` : `u128` - the base that you want to multiply itself `power`.
-/// * `power` : `u128` - the number of times you want to multiply `base` with itself.
+/// * `base` : `Vec<u8>` - the base that you want to multiply itself `power`.
+///
+/// * `power` : `Vec<u8>` - the number of times you want to multiply `base` with itself.
 ///
 /// ### Returns
 ///
@@ -1457,14 +1462,45 @@ pub fn sieve_of_eratosthenes(n: u128) -> Vec<u128> {
 /// ```
 /// use project_euler::maths::get_power_of_a_number as f;
 ///
-// / assert_eq!(f(0, 0), vec![0]);  // TODO
-// / assert_eq!(f(1), vec![]);
-// / assert_eq!(f(3), vec![2, 3]);
-// / assert_eq!(f(10), vec![2, 3, 5, 7]);
-// / assert_eq!(f(11), vec![2, 3, 5, 7, 11]);
+/// assert_eq!(f(vec![0], vec![0]), vec![0]);
+/// assert_eq!(f(vec![1], vec![0]), vec![1]);
+/// assert_eq!(f(vec![3], vec![0]), vec![1]);
+/// assert_eq!(f(vec![3], vec![1]), vec![3]);
+/// assert_eq!(f(vec![1, 0], vec![2]), vec![1, 0, 0]);
+/// assert_eq!(f(vec![1, 1], vec![3]), vec![1, 3, 3, 1]);
+/// assert_eq!(f(vec![2], vec![1, 0, 0, 0]), vec![1, 0, 7, 1, 5, 0, 8, 6, 0, 7, 1,
+///     8, 6, 2, 6, 7, 3, 2, 0, 9, 4, 8, 4, 2, 5, 0, 4, 9, 0, 6, 0, 0, 0, 1, 8, 1,
+///     0, 5, 6, 1, 4, 0, 4, 8, 1, 1, 7, 0, 5, 5, 3, 3, 6, 0, 7, 4, 4, 3, 7, 5, 0,
+///     3, 8, 8, 3, 7, 0, 3, 5, 1, 0, 5, 1, 1, 2, 4, 9, 3, 6, 1, 2, 2, 4, 9, 3, 1,
+///     9, 8, 3, 7, 8, 8, 1, 5, 6, 9, 5, 8, 5, 8, 1, 2, 7, 5, 9, 4, 6, 7, 2, 9, 1,
+///     7, 5, 5, 3, 1, 4, 6, 8, 2, 5, 1, 8, 7, 1, 4, 5, 2, 8, 5, 6, 9, 2, 3, 1, 4,
+///     0, 4, 3, 5, 9, 8, 4, 5, 7, 7, 5, 7, 4, 6, 9, 8, 5, 7, 4, 8, 0, 3, 9, 3, 4,
+///     5, 6, 7, 7, 7, 4, 8, 2, 4, 2, 3, 0, 9, 8, 5, 4, 2, 1, 0, 7, 4, 6, 0, 5, 0,
+///     6, 2, 3, 7, 1, 1, 4, 1, 8, 7, 7, 9, 5, 4, 1, 8, 2, 1, 5, 3, 0, 4, 6, 4, 7,
+///     4, 9, 8, 3, 5, 8, 1, 9, 4, 1, 2, 6, 7, 3, 9, 8, 7, 6, 7, 5, 5, 9, 1, 6, 5,
+///     5, 4, 3, 9, 4, 6, 0, 7, 7, 0, 6, 2, 9, 1, 4, 5, 7, 1, 1, 9, 6, 4, 7, 7, 6,
+///     8, 6, 5, 4, 2, 1, 6, 7, 6, 6, 0, 4, 2, 9, 8, 3, 1, 6, 5, 2, 6, 2, 4, 3, 8,
+///     6, 8, 3, 7, 2, 0, 5, 6, 6, 8, 0, 6, 9, 3, 7, 6
+/// ]);
 ///
 /// ```
 pub fn get_power_of_a_number(base: Vec<u8>, power: Vec<u8>) -> Vec<u8> {
+    if base == vec![0] {
+        return vec![0];
+    }
+
+    if base == vec![1] {
+        return vec![1];
+    }
+
+    if power == vec![0] {
+        return vec![1];
+    }
+
+    if power == vec![1] {
+        return base;
+    }
+
     let index: Option<usize> = base.iter().position(|&x| x != 0);
     let base: Vec<u8> = match index {
         Some(index) => base[index..].to_vec(),
@@ -1521,8 +1557,8 @@ pub fn get_power_of_a_number(base: Vec<u8>, power: Vec<u8>) -> Vec<u8> {
     return answer;
 }
 
-#[allow(dead_code)] // TODO
-/// Returns the product of 2 numbers(in Vector of u8) as a Vector of u8.
+#[allow(dead_code)]
+/// Returns the product of 2 numbers (in the form of Vector of u8) as a Vector of u8.
 ///
 /// If any of the number is `vec![0]`, `vec![0]` is returned.
 ///
@@ -1540,13 +1576,13 @@ pub fn get_power_of_a_number(base: Vec<u8>, power: Vec<u8>) -> Vec<u8> {
 /// ### Examples
 ///
 /// ```
-/// use project_euler::maths::get_power_of_a_number as f;
+/// use project_euler::maths::multiply_two_numbers_as_vec as f;
 ///
-// / assert_eq!(f(0, 0), vec![0]);  // TODO
-// / assert_eq!(f(1), vec![]);
-// / assert_eq!(f(3), vec![2, 3]);
-// / assert_eq!(f(10), vec![2, 3, 5, 7]);
-// / assert_eq!(f(11), vec![2, 3, 5, 7, 11]);
+/// assert_eq!(f(vec![0], vec![0]), vec![0]);
+/// assert_eq!(f(vec![1], vec![2, 3]), vec![2, 3]);
+/// assert_eq!(f(vec![1, 2], vec![1, 2]), vec![1, 4, 4]);
+/// assert_eq!(f(vec![1, 2, 1], vec![1, 1]), vec![1, 3, 3, 1]);
+/// assert_eq!(f(vec![2, 2], vec![2, 2]), vec![4, 8, 4]);
 ///
 /// ```
 pub fn multiply_two_numbers_as_vec(num1: Vec<u8>, num2: Vec<u8>) -> Vec<u8> {
@@ -1617,7 +1653,38 @@ pub fn multiply_two_numbers_as_vec(num1: Vec<u8>, num2: Vec<u8>) -> Vec<u8> {
     };
 }
 
-// TODO
+#[allow(dead_code)]
+/// Returns the given u128 number in Vec<u8> format.
+///
+/// Helper function for [`get_power_of_a_number`] and [`multiply_two_numbers_as_vec`]
+///
+/// [`get_power_of_a_number`]: fn.get_power_of_a_number.html
+/// [`multiply_two_numbers_as_vec`]: fn.get_power_of_a_number.html
+///
+/// If `u == 0`, `vec![0]` is returned.
+///
+/// In any other case, a `Vec<u8>` is returned.
+///
+/// ### Arguments
+///
+/// * `u` : `u128` - the number that we need to convert into `Vec<u8>`.
+///
+/// ### Returns
+///
+/// * `Vec<u8>` - The digits of `u` as a vector.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::u128_to_vecu8 as f;
+///
+/// assert_eq!(f(0), vec![0]);
+/// assert_eq!(f(1), vec![1]);
+/// assert_eq!(f(3), vec![3]);
+/// assert_eq!(f(10), vec![1, 0]);
+/// assert_eq!(f(8889), vec![8, 8, 8, 9]);
+///
+/// ```
 pub fn u128_to_vecu8(u: u128) -> Vec<u8> {
     if u == 0 {
         return vec![0];
