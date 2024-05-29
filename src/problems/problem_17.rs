@@ -29,16 +29,7 @@ fn solution_1() {
     ];
 
     let tens_map: [&str; 10] = [
-        "",
-        "",
-        "twenty",
-        "thirty",
-        "forty",
-        "fifty",
-        "sixty",
-        "seventy",
-        "eighty",
-        "ninety",
+        "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety",
     ];
 
     let mut ans: usize = 0;
@@ -66,7 +57,6 @@ fn solution_1() {
         let tens_digit: usize = numm % 10;
         let hundreds_digits: usize = numm / 10;
 
-
         if tens_digit < 2 {
             let tens_ones_number: usize = tens_digit * 10 + ones_digit;
             ans += ones_map[hundreds_digits].len() + "hundred".len();
@@ -77,7 +67,6 @@ fn solution_1() {
             }
             ans += "and".len() + ones_map[tens_ones_number].len();
             // println!("{}{}{}{}", ones_map[hundreds_digits], "hundred", "and", ones_map[tens_ones_number]);
-
         } else {
             ans += ones_map[hundreds_digits].len() + "hundred".len() + "and".len();
             ans += tens_map[tens_digit].len();
@@ -94,6 +83,5 @@ fn solution_1() {
 
 #[allow(dead_code)]
 pub fn solve() {
-
     time_solutions!(solution_1());
 }
