@@ -638,6 +638,42 @@ pub fn all_divisors(n: u128) -> Vec<u128> {
 }
 
 #[allow(dead_code)]
+/// Returns the sum of all the divisors of `n` including `1` and `n`.
+///
+/// If `n == 0`, 0 is returned.
+///
+/// ### Arguments
+///
+/// * `n` : `u128` - The number for which we need to find the sum of all the divisors.
+///
+/// ### Returns
+///
+/// * `u128` - Sum of all divisors of `n`.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::all_divisors as f;
+///
+/// assert_eq!(f(0), 0);
+/// assert_eq!(f(1), 1);
+/// assert_eq!(f(2), 3);
+/// assert_eq!(f(23), 24);
+/// assert_eq!(f(100), 217);
+/// assert_eq!(f(5040), 19344);
+///
+/// ```
+pub fn sum_of_all_divisors(n: u128) -> u128 {
+    if n == 0 {
+        return 0;
+    }
+
+    let all_divisors_vec: Vec<u128> = all_divisors(n);
+
+    return all_divisors_vec.iter().sum::<u128>();
+}
+
+#[allow(dead_code)]
 /// Returns the maximum product of `n_adjacent` adjacent numbers in a grid of any size
 ///
 /// The function checks for maximum product horizontally, vertically, and along the directions of both diagonals.
