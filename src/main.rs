@@ -47,6 +47,7 @@ fn main() {
             21 => problems::problem_21::solve(),
             22 => problems::problem_22::solve(),
             23 => problems::problem_23::solve(),
+            24 => problems::problem_24::solve(),
 
             _ => problems::problem::solve(),
         };
