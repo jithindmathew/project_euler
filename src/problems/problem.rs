@@ -8,4 +8,3 @@ pub fn solve() {
         println!("{} {:?}", i, maths::sum_of_all_divisors(i) - i);
     }
 }
-

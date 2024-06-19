@@ -335,7 +335,6 @@ pub fn factorial_as_u128(n: u128) -> u128 {
     ];
 
     return ans_list[n as usize];
-
 }
 
 #[allow(dead_code)]
@@ -729,7 +728,7 @@ pub fn all_divisors(n: u128) -> Vec<u128> {
 /// ### Examples
 ///
 /// ```
-/// use project_euler::maths::all_divisors as f;
+/// use project_euler::maths::sum_of_all_divisors as f;
 ///
 /// assert_eq!(f(0), 0);
 /// assert_eq!(f(1), 1);
@@ -1766,6 +1765,88 @@ pub fn multiply_two_numbers_as_vec(num1: Vec<u8>, num2: Vec<u8>) -> Vec<u8> {
 }
 
 #[allow(dead_code)]
+/// Returns the sum of 2 numbers (in the form of Vector of u8) as a Vector of u8.
+///
+/// If any of the number is `vec![0]`, the other number is returned.
+///
+/// Currently not usable with negative numbers.
+///
+/// ### Arguments
+///
+/// * `num1` : `Vec<u8>` - the first number in the form of vector of u8. If the actual number is `2453`, it should be passed in as `vec![2, 4, 5, 3]`
+/// * `num2` : `Vec<u8>` - the second number in the form of vector of u8.
+///
+/// ### Returns
+///
+/// * `Vec<u8>` - The digits of the answer in a Vector.
+///
+/// ### Examples
+///
+/// ```
+/// use project_euler::maths::add_two_numbers_as_vec as f;
+///
+/// assert_eq!(f(vec![0], vec![0]), vec![0]);
+/// assert_eq!(f(vec![1], vec![2, 3]), vec![2, 4]);
+/// assert_eq!(f(vec![1, 2], vec![1, 2]), vec![2, 4]);
+/// assert_eq!(f(vec![1, 2, 1], vec![1, 1]), vec![1, 3, 2]);
+/// assert_eq!(f(vec![2, 2], vec![2, 2]), vec![4, 4]);
+///
+/// ```
+pub fn add_two_numbers_as_vec(num1: Vec<u8>, num2: Vec<u8>) -> Vec<u8> {
+    if num1 == vec![0] {
+        return num2;
+    }
+    if num2 == vec![0] {
+        return num1;
+    }
+
+    let mut ans_vec: Vec<u8> = vec![0; num1.len() + 1];
+
+    let mut num1: Vec<u8> = num1;
+    let mut num2: Vec<u8> = num2;
+
+    num1.reverse();
+    num2.reverse();
+
+    let max_len: usize = num1.len().max(num2.len());
+
+    let zipped: Vec<(u8, u8)> = num1
+        .into_iter()
+        .chain(std::iter::repeat(0))
+        .take(max_len)
+        .zip(num2.into_iter().chain(std::iter::repeat(0)).take(max_len))
+        .collect();
+
+    let mut carry: u8 = 0;
+    let mut summ: u8 = 0;
+
+    let mut last_index: usize = 0;
+
+    for (index, (digit1, digit2)) in zipped.iter().enumerate() {
+        summ = *digit1 + *digit2 + carry;
+
+        let num_to_insert: u8 = summ % 10;
+        carry = summ / 10;
+
+        ans_vec[index] = num_to_insert;
+        last_index = index;
+    }
+
+    if carry > 0 {
+        ans_vec[last_index + 1] = carry;
+    }
+
+    ans_vec.reverse();
+
+    let first_non_zero_position: Option<usize> = ans_vec.iter().position(|&x| x != 0);
+
+    return match first_non_zero_position {
+        Some(index) => ans_vec[index..].to_vec(),
+        None => vec![0],
+    };
+}
+
+#[allow(dead_code)]
 /// Returns the given u128 number in Vec<u8> format.
 ///
 /// Helper function for [`get_power_of_a_number`] and [`multiply_two_numbers_as_vec`]
@@ -1882,5 +1963,4 @@ mod tests {
             assert_eq!(is_palindrome(input), expected_output);
         }
     }
-
 }

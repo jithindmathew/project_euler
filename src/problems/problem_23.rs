@@ -10,7 +10,6 @@ fn solution_1() {
     let mut abundant_numbers: HashSet<u128> = HashSet::new();
     let mut abundant_numbers_sums: HashSet<u128> = HashSet::new();
 
-
     for num in 2..=28123 {
         let sum_divisors: u128 = maths::sum_of_all_divisors(num as u128) - num;
 
@@ -34,7 +33,6 @@ fn solution_1() {
     }
 
     println!("Answer : {}", ans);
-
 }
 
 #[allow(dead_code)]

@@ -1,4 +1,4 @@
-// https://projecteuler.net/problem=23
+// https://projecteuler.net/problem=24
 
 #[allow(unused_imports)]
 use crate::{maths, time_solutions};
@@ -27,21 +27,12 @@ fn solution_1(digit: u128, position: u128) {
     let ans_str: String = ans.iter().map(|&x| (x + b'0') as char).collect::<String>();
 
     println!("{}", ans_str);
+
+    println!(
+        "{:?}",
+        maths::add_two_numbers_as_vec(vec![1, 2], vec![1, 2],)
+    );
 }
-
-// 0123
-// 0132
-// 0213
-// 0231
-// 0312
-// 0321
-
-// 1023
-// 1032
-// 1203
-// 1230
-// 1302
-// 1320
 
 #[allow(dead_code)]
 pub fn solve() {
