@@ -1,4 +1,4 @@
-# Solutions to first 100 problems in [Project Euler](https://projecteuler.net/archives) in Rust
+# Solutions to first 31 problems in [Project Euler](https://projecteuler.net/archives) in Rust
 
 #### Solve problem
 
@@ -104,12 +104,6 @@ Refer `benches/benchmarks.rs` for more info on benchmark parameters.
 Benchmarking report is available at `target/criterion/report/`. Open `index.html` to view report.
 
 References : [cargo-bench](https://doc.rust-lang.org/cargo/commands/cargo-bench.html)
-
----
-
-#### Why only 100 problems?
-
-Project Euler gives permission only to publish solutions to first 100 problems.
 
 ---
 

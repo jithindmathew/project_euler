@@ -1,4 +1,3 @@
-pub mod problem;
 pub mod problem_1;
 pub mod problem_10;
 pub mod problem_11;
@@ -17,7 +16,13 @@ pub mod problem_22;
 pub mod problem_23;
 pub mod problem_24;
 pub mod problem_25;
+pub mod problem_26;
+pub mod problem_27;
+pub mod problem_28;
+pub mod problem_29;
 pub mod problem_3;
+pub mod problem_30;
+pub mod problem_31;
 pub mod problem_4;
 pub mod problem_5;
 pub mod problem_6;

@@ -22,7 +22,6 @@ fn solution_1(num_digits: u128) {
 
         fib_n_minus_2 = fib_n_minus_1.clone();
         fib_n_minus_1 = fib_n.clone();
-
     }
     println!("{}", index);
 }

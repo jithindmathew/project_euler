@@ -1,3 +1,4 @@
+use core::panic;
 use std::collections::HashMap;
 
 #[allow(dead_code)]
@@ -1764,7 +1765,7 @@ pub fn multiply_two_numbers_as_vec(num1: Vec<u8>, num2: Vec<u8>) -> Vec<u8> {
     };
 }
 
-#[allow(dead_code)]
+#[allow(dead_code, unused_assignments)]
 /// Returns the sum of 2 numbers (in the form of Vector of u8) as a Vector of u8.
 ///
 /// If any of the number is `vec![0]`, the other number is returned.
@@ -1896,6 +1897,78 @@ pub fn u128_to_vecu8(u: u128) -> Vec<u8> {
     digits.reverse();
 
     return digits;
+}
+
+#[allow(dead_code)]
+pub fn decimal_expansion(n: u128) -> (Vec<u8>, bool, usize) {
+    assert!(n >= 2, "Input must be greater than or equal to 2");
+
+    let mut digits: Vec<u8> = Vec::new();
+    let mut remainders_seen: HashMap<u128, usize> = HashMap::new();
+    let mut remainder: u128 = 1;
+
+    loop {
+        if remainder == 0 {
+            return (digits, false, 0);
+        }
+
+        if let Some(start_index) = remainders_seen.get(&remainder) {
+            let repeating_len: usize = digits.len() - start_index;
+            return (digits, true, repeating_len);
+        }
+
+        remainders_seen.insert(remainder, digits.len());
+
+        remainder *= 10;
+
+        let digit: u128 = remainder / n;
+        digits.push(digit as u8);
+        remainder %= n;
+    }
+}
+
+#[allow(dead_code)]
+pub fn create_spiral_matrix(n: u128) -> Vec<Vec<u128>> {
+    if n % 2 == 0 {
+        panic!("Cannot create spiral matrix where side length is even number");
+    }
+
+    let mut matrix: Vec<Vec<u128>> = vec![vec![0; n as usize]; n as usize];
+
+    let mut num_to_fill: u128 = n * n;
+
+    let mut left: usize = 0;
+    let mut right: usize = n as usize - 1;
+
+    let mut top: usize = 0;
+    let mut bottom: usize = n as usize - 1;
+
+    while left <= right && top <= bottom {
+        for i in (left..=right).rev() {
+            matrix[top][i] = num_to_fill;
+            num_to_fill -= 1;
+        }
+        top += 1;
+
+        for i in top..=bottom {
+            matrix[i][left] = num_to_fill;
+            num_to_fill -= 1;
+        }
+        left += 1;
+
+        for i in left..=right {
+            matrix[bottom][i] = num_to_fill;
+            num_to_fill -= 1;
+        }
+        bottom -= 1;
+
+        for i in (top..=bottom).rev() {
+            matrix[i][right] = num_to_fill;
+            num_to_fill -= 1;
+        }
+        right -= 1;
+    }
+    return matrix;
 }
 
 #[cfg(test)]

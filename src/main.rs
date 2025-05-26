@@ -7,7 +7,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
-        problems::problem::solve();
+        println!("Invalid Command");
         return;
     }
 
@@ -49,9 +49,13 @@ fn main() {
             23 => problems::problem_23::solve(),
             24 => problems::problem_24::solve(),
             25 => problems::problem_25::solve(),
-
-
-            _ => problems::problem::solve(),
+            26 => problems::problem_26::solve(),
+            27 => problems::problem_27::solve(),
+            28 => problems::problem_28::solve(),
+            29 => problems::problem_29::solve(),
+            30 => problems::problem_30::solve(),
+            31 => problems::problem_31::solve(),
+            _ => println!("Problem Not Solved"),
         };
     }
     println!("=============================================================================")
